@@ -19,24 +19,71 @@ if (isset($_SESSION['cart'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Shopping Site</title>
+    <title>Medusa Gym</title>
+    
     <!-- Include DataTables CSS and other styles -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
         }
 
+        /* Hero Section */
+        .hero {
+            background-image: url('https://images.pexels.com/photos/1552252/pexels-photo-1552252.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            z-index: 1;
+        }
+
+        .hero .cta {
+            background-color: #ff4500;
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 1;
+        }
+
+        /* Navigation Bar */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #007bff;
+            background-color: rgba(0, 0, 0, 0.8);
             padding: 10px 20px;
             color: white;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
         }
 
         nav a {
@@ -80,6 +127,7 @@ if (isset($_SESSION['cart'])) {
             margin: 20px 0;
         }
 
+        /* Product Table */
         table {
             width: 90%;
             max-width: 1200px;
@@ -135,9 +183,12 @@ if (isset($_SESSION['cart'])) {
     </script>
 </head>
 <body>
+
     <!-- Navigation Bar -->
     <nav>
-        <h1>Online Shopping</h1>
+        <div>
+            <a href="#">Medusa Gym</a>
+        </div>
         <div>
             <?php if ($is_logged_in): ?>
                 <span>Welcome, <?php echo $_SESSION['username']; ?>!</span>
@@ -146,8 +197,6 @@ if (isset($_SESSION['cart'])) {
                 <a href="login.php">Login</a>
                 <a href="register.php">Register</a>
             <?php endif; ?>
-
-            <!-- Cart Icon with Item Count -->
             <div class="cart">
                 <a href="cart.php">
                     <img src="cart-icon.png" alt="Cart">
@@ -158,6 +207,16 @@ if (isset($_SESSION['cart'])) {
             </div>
         </div>
     </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div>
+            <h1>It’s gym season, Gymrat!</h1>
+            <p>Ready for the next step?</p>
+            <button class="cta">Shop this sale</button>
+        </div>
+    </section>
 
     <!-- Product Table -->
     <h1>Welcome to Our Online Store</h1>
