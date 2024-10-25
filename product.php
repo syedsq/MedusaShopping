@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 include 'config.php';  // Include database connection
@@ -64,18 +65,6 @@ if (isset($_SESSION['cart'])) {
             </li>
         </ul>
     </nav>
-
-
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-overlay"></div>
-        <div>
-            <h1>It’s gym season, Gymrat!</h1>
-            <p>Ready for the next step?</p>
-            <button class="browse"><a href="product.php">Shop this sale </a></button>
-        </div>
-    </section>
 
     <!-- Product Table -->
     <h1>Welcome to Our Online Store</h1>
