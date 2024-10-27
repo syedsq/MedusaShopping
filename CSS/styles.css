@@ -71,7 +71,7 @@ body {
 }
 
 .navbar a:hover {
-    background-color: hsl(0, 0%, 10%);
+    background-color: hsl(0, 59%, 70%);
     border-radius: 12px;
 }
 
@@ -100,6 +100,72 @@ body {
     align-items: center;
     border-radius: 50%;
     z-index: 10;
+}
+
+/* Cart Preview Styles */
+.cart-preview {
+    top:50px;
+    text-align: left;
+    display: none; /* Hidden by default */
+    position: absolute; /* Position relative to the cart icon */
+    background-color: white; /* Background color of the preview */
+    border: 1px solid #ddd; /* Border to define the preview area */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px; /* Padding inside the preview */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    z-index: 0; /* Make sure it appears above other elements */
+    right: 0; /* Align it to the right of the cart icon */
+    width: 400px; /* Set a width for the preview */
+}
+
+
+/* Show the cart preview when hovering over the cart */
+.cart:hover .cart-preview {
+    display: block; /* Show the preview on hover */
+}
+
+.cart-preview h3 {
+    margin: 0 0 10px; /* Margin for the title */
+    font-size: 18px; /* Title font size */
+    font-weight: bold; /* Bold title */
+}
+
+.cart-preview ul {
+    list-style-type: none; /* Remove bullet points */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.cart-preview ul li {
+    padding: 5px 0; /* Space between items */
+    border-bottom: 1px solid #eee; /* Line separating items */
+    font-size: 20px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: left;
+    
+}
+.cart-preview ul li:last-child {
+    border-bottom: none; /* Remove line from the last item */
+    text-align: left;
+}
+
+.view-cart {
+    display: block; /* Make the view cart link block level */
+    text-align: center; /* Center the text */
+    padding-top: 50px;
+    padding: 8px; /* Padding */
+    background-color: #007bff; /* Button background color */
+    color: rgb(241, 130, 130); /* Text color */
+    text-decoration: none; /* Remove underline */
+    border-radius: 4px; /* Rounded corners */
+    margin-top: 10px; /* Margin above the button */
+}
+
+.view-cart:hover {
+    background-color: #0056b3; /* Darken background on hover */
 }
 
 /* Product Table */

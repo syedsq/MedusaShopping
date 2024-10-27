@@ -45,13 +45,15 @@ if (isset($_SESSION['cart'])) {
 <body>
 
     <!-- Navigation Bar -->
-    <nav class="navbar">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
     <ul>
         <!-- Logo on the left -->
-        <li class="logo"><a class="main_page" href="index.php">
-            <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym
-        </a></li>
-
+        <li class="logo">
+            <a class="main_page" href="index.php">
+                <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym
+            </a>
+        </li>
         <!-- Links on the right -->
         <div class="nav-items">
             <li><a class="NavButton" href="product.php">Browse</a></li>
@@ -70,7 +72,7 @@ if (isset($_SESSION['cart'])) {
                     <?php endif; ?>
                 </a>
             </li>
-            
+            <li><p>'\t'</p></li>
         </div>
     </ul>
 </nav>

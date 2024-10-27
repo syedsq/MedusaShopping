@@ -69,6 +69,17 @@ if (isset($_SESSION['cart'])) {
                         <div class="cart-count"><?php echo $cart_item_count; ?></div>
                     <?php endif; ?>
                 </a>
+                <div class="cart-preview" id="cart-preview">
+                <h3>Cart Preview</h3>
+                <ul id="cart-items">
+                    <!-- Dynamically generated cart items will go here -->
+                </ul>
+                <?php if ($cart_item_count > 0): ?>
+                <a href="cart.php" class="view-cart">View Cart</a>
+                <?php else: ?>
+                <a href="product.php" class="view-cart">Browse our product</a>
+                <?php endif; ?>
+                </div>
             </li>
             <li><p>'\t'</p></li>
         </div>
@@ -130,6 +141,8 @@ if (isset($_SESSION['cart'])) {
             -->
     <!-- Close the database connection -->
     <?php $conn->close(); ?>
-           
+    <script src="cart.js"></script>
+
 </body>
+
 </html>
