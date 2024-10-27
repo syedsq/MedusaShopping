@@ -36,6 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
+        .textbox {
+            width: 90%;    
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -48,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         .form-container {
             background-color: #fff;
-            padding: 20px;
+            padding: 20px; /* Increased padding */
+            margin: 20px; /* Add margin */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
@@ -84,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
 </head>
 <body>
+    
     <div class="form-container">
         <h2>Login</h2>
         <form action="login.php" method="POST">
@@ -91,9 +96,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <input type="email" name="email" required>
 
             <label>Password:</label>
-            <input type="password" name="password" required>
+            <input class="textbox" type="password" name="password" required>
 
-            <input type="submit" value="Login">
+            <input class="textbox" type="submit" value="Login">
         </form>
         <p style="text-align:center;">Don't have an account? <a href="register.php">Register here</a></p>
     </div>

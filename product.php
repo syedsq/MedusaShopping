@@ -46,14 +46,21 @@ if (isset($_SESSION['cart'])) {
 
     <!-- Navigation Bar -->
     <nav class="navbar">
-        <ul>
-            <li><a href="index.php">Medusa Gym</a></li>
+    <ul>
+        <!-- Logo on the left -->
+        <li class="logo"><a class="main_page" href="index.php">
+            <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym
+        </a></li>
+
+        <!-- Links on the right -->
+        <div class="nav-items">
+            <li><a class="NavButton" href="product.php">Browse</a></li>
             <?php if ($is_logged_in): ?>
-                <li><span>Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
+                <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
                 <li><a href="logout.php">Logout</a></li>
             <?php else: ?>
-                <li><a href="login.php">Login</a></li>
-                <li><a href="register.php">Register</a></li>
+                <li><a class="NavButton" href="login.php">Login</a></li>
+                <li><a class="NavButton" href="register.php">Register</a></li>
             <?php endif; ?>
             <li class="cart">
                 <a href="cart.php">
@@ -63,8 +70,10 @@ if (isset($_SESSION['cart'])) {
                     <?php endif; ?>
                 </a>
             </li>
-        </ul>
-    </nav>
+            
+        </div>
+    </ul>
+</nav>
 
     <!-- Product Table -->
     <h1>Welcome to Our Online Store</h1>

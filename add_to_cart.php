@@ -30,7 +30,7 @@ if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
         }
         
         // Redirect back to the homepage (index.php) after adding to cart
-        header("Location: index.php");
+        header("Location: product.php");
         exit();
     } else {
         echo "Product not found.";
@@ -39,6 +39,13 @@ if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
     $stmt->close();
     $conn->close();
 } else {
-    echo "Invalid product or quantity.";
+    if (isset($_POST['product_id'])) {
+        echo "Invalid Product id";
+    }
+    if (isset($_POST['quantity'])) {
+        echo "Error quantity.";
+    }else {
+        echo "no idea";
+    }
 }
 ?>

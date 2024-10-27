@@ -5,26 +5,62 @@ body {
     margin: 0;
     padding-top: 60px; /* To avoid content overlapping with the fixed navbar */
 }
+
+.main_page {
+    font-size: 40px;
+    font-style: bold;
+    font-family: 'Brush Script MT', cursive;
+}
+
+.navButton {
+    font-size: 30px;
+    font-weight: bold; /* Corrected bold styling */
+    font-family: 'Greek', sans-serif; /* Add sans-serif as a fallback */
+}
+
+.image {
+    width: 40px;
+    height: 40px;
+}
 .navbar {
-    background-color: hsl(0, 0%, 25%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: hsl(54, 37%, 54%);
     width: 100%;
-    overflow: hidden;
+    padding: 0 2em;
     position: fixed;
     top: 0;
     z-index: 100;
-    padding: 0;
 }
 
 .navbar ul {
+    display: flex;
+    align-items: center;
+    width: 100%;
     list-style-type: none;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: space-between;
 }
 
-.navbar li {
-    float: left;
+.logo {
+    margin-right: auto; /* Pushes logo to the far left */
+}
+
+.nav-items {
+    display: flex;
+    align-items: center;
+    gap: 1.5em; /* Space between items in nav-items */
+    
+}
+
+
+
+
+.NavButton {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
 }
 
 .navbar a {
@@ -32,25 +68,28 @@ body {
     text-decoration: none;
     padding: 15px 20px;
     display: block;
-    text-align: center;
 }
 
 .navbar a:hover {
     background-color: hsl(0, 0%, 10%);
+    border-radius: 12px;
 }
 
-.navbar .cart {
-    position: center;
+.cart {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-right: 0;
 }
 
-.navbar .cart img {
+.cart img {
     width: 30px;
 }
 
-.navbar .cart .cart-count {
+.cart .cart-count {
     position: absolute;
-    top: -5px;
-    right: -10px;
+    top: 0;
+    right: 0;
     background-color: red;
     color: white;
     font-size: 12px;
@@ -60,14 +99,8 @@ body {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
+    z-index: 10;
 }
-
-/* clearfix to fix floating issues */
-.navbar::after {
-    content: "";
-    clear: both;
-    display: table;
-}      
 
 /* Product Table */
 table {
