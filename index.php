@@ -49,8 +49,7 @@ if (isset($_SESSION['cart'])) {
         <!-- Logo on the left -->
         <li class="logo">
             <a class="main_page" href="index.php">
-                <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym
-            </a>
+                <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym</a>
         </li>
         <!-- Links on the right -->
         <div class="nav-items">
@@ -98,51 +97,11 @@ if (isset($_SESSION['cart'])) {
         </div>
     </section>
 
-    
-    <!-- Product Table 
-    <h1>Welcome to Our Online Store</h1>
-    <table id="itemsTable" class="display">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price ($)</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // Fetch products from the database
-            $sql = "SELECT id, name, description, price, image FROM products";
-            $result = $conn->query($sql);
-
-            if ($result && $result->num_rows > 0):
-                while ($row = $result->fetch_assoc()):
-            ?>
-                <tr>
-                    <td><img src="<?php echo htmlspecialchars($row['image']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>" width="100"></td>
-                    <td><?php echo htmlspecialchars($row['name']); ?></td>
-                    <td><?php echo htmlspecialchars($row['description']); ?></td>
-                    <td><?php echo number_format($row['price'], 2); ?></td>
-                    <td>
-                        <form action="add_to_cart.php" method="post">
-                            <input type="hidden" name="product_id" value="<?php echo (int)$row['id']; ?>">
-                            <input type="number" name="quantity" value="1" min="1" max="10">
-                            <input type="submit" value="Add to Cart">
-                        </form>
-                    </td>   
-                </tr>
-            <?php endwhile; else: ?>
-                <tr><td colspan="5">No products found.</td></tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-            -->
+   
+            
     <!-- Close the database connection -->
     <?php $conn->close(); ?>
     <script src="cart.js"></script>
 
 </body>
-
 </html>
