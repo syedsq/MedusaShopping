@@ -42,40 +42,39 @@ if (isset($_SESSION['cart'])) {
     
     
 </head>
-<body>
-
+<body >
+    
     <!-- Navigation Bar -->
         <!-- Navigation Bar -->
-        <nav class="navbar">
-    <ul>
-        <!-- Logo on the left -->
-        <li class="logo">
-            <a class="main_page" href="index.php">
-                <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym
-            </a>
-        </li>
-        <!-- Links on the right -->
-        <div class="nav-items">
-            <li><a class="NavButton" href="product.php">Browse</a></li>
-            <?php if ($is_logged_in): ?>
-                <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
-                <li><a href="logout.php">Logout</a></li>
-            <?php else: ?>
-                <li><a class="NavButton" href="login.php">Login</a></li>
-                <li><a class="NavButton" href="register.php">Register</a></li>
-            <?php endif; ?>
-            <li class="cart">
-                <a href="cart.php">
-                    <img src="icon-image/cart.png" alt="Cart">
-                    <?php if ($cart_item_count > 0): ?>
-                        <div class="cart-count"><?php echo $cart_item_count; ?></div>
-                    <?php endif; ?>
+    <nav class="navbar">
+        <ul>
+            <!-- Logo on the left -->
+            <li class="logo">
+                <a class="main_page" href="index.php">
+                    <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym
                 </a>
             </li>
-            <li><p>'\t'</p></li>
-        </div>
-    </ul>
-</nav>
+            <!-- Links on the right -->
+            <div class="nav-items">
+                <li><a class="NavButton" href="product.php">Browse</a></li>
+                <?php if ($is_logged_in): ?>
+                    <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
+                    <li><a href="logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li><a class="NavButton" href="login.php">Login</a></li>
+                    <li><a class="NavButton" href="register.php">Register</a></li>
+                <?php endif; ?>
+                <li class="cart">
+                    <a href="cart.php">
+                        <img src="icon-image/cart.png" alt="Cart">
+                        <?php if ($cart_item_count > 0): ?>
+                            <div class="cart-count"><?php echo $cart_item_count; ?></div>
+                        <?php endif; ?>
+                    </a>
+                </li>
+            </div>
+        </ul>
+    </nav>
 
     <!-- Product Table -->
     <h1>Welcome to Our Online Store</h1>
