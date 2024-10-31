@@ -79,6 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="form-container">
+
+    
         <h2>Register</h2>
         <form action="register.php" method="POST">
             <label>Username:</label>

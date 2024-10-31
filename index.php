@@ -22,6 +22,16 @@ if (isset($_SESSION['cart'])) {
     <title>Medusa Gym</title>
     
     <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z3ltfGVufDB8fDB8fHww');
+            
+            background-repeat:no-repeat ;
+            background-size: cover;
+            background-attachment: fixed;
+        }
         <?php include 'CSS/styles.css'; ?>
     </style>
 
@@ -77,9 +87,9 @@ if (isset($_SESSION['cart'])) {
 
 
     <!-- background Section -->
-    <section class="background">
-        <div class="background-overlay"></div>
-        <div class="mainpage-background">
+    <section class="cardview">
+        <div class="cardview-overlay"></div>
+        <div class="mainpage-cardview">
             <h1>It’s gym season, Gymrat!</h1>
             <p>Ready for the next step?</p>
             <a class= "browse" href="product.php">Shop this sale </a>

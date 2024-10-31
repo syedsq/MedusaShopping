@@ -6,28 +6,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('http://www.birds.com/wp-content/uploads/home/bird4.jpg');
+    
     
     background-repeat:no-repeat ;
     background-size: cover;
     background-attachment: fixed;
- 
-    /* To avoid content overlapping with the fixed navbar */
+    padding-top: 6%;
 }
 
-body .main-page-body{
-    margin: 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url('../background/GymAnimatedBackground.jpg');
-    
-    background-color: rgb(182, 182, 226);
-    background-repeat:no-repeat ;
-    background-size: cover;
-    background-attachment: fixed;
-    
-}
 .main_page {
     
     font-size: 40px;
@@ -235,40 +221,45 @@ input[type="submit"]:hover {
     background-color: #218838;
 }
 /* background Section */
-.background {
-    background-size:auto;
-    background-position: center;
-    height: 100vh;
-    width: 101%;
+.cardview {
+    background-size:cover;
+    background-image: url('https://wallpapers.com/images/high/pompadour-giga-chad-kni4u74uoegys5o9.webp');
+    background-position: 75% 25%;
+    background-repeat: no-repeat;
+    height: 600px;
+    width: 70%;
+    border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: rgba(255, 255, 255, 0.979);
+    border-radius: 24px;
     text-align: center;
     position: relative;
 }
 
-.background-overlay {
+.cardview-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 24px;
     z-index: 1; /* Overlay stays behind content */
 }
 
-.background h1, .background p, .background .browse {
+.cardview h1, .cardview p, .cardview .browse {
     z-index: 2; /* Ensure content is above the overlay */
     position: relative;
 }
 
-.background h1 {
+.cardview h1 {
     font-size: 3.5rem;
     margin-bottom: 10px;
 }
 
-.background .browse {
+.cardview .browse {
     background-color:rgba(68, 98, 180, 0.459) ;
     text-wrap: wrap;
     padding: 20px 20px;
@@ -280,6 +271,6 @@ input[type="submit"]:hover {
     text-decoration: none;
     display: inline-block; 
 }
-.background .browse:hover {
+.cardview .browse:hover {
 background-color: hsl(0, 59%, 70%);
     border-radius: 12px;}
