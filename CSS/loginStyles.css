@@ -16,6 +16,7 @@ body{
 .border {
     
     position: relative;
+    flex-wrap: wrap;
     width: 400px;
     height: 440px;
     background-image:linear-gradient(-225deg, #fafde3 50%, #ffe6e6 50%);
