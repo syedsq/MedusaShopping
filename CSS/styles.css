@@ -25,17 +25,23 @@ body {
     font-size: 30px;
     font-weight: bold; /* Corrected bold styling */
     font-family: 'Greek', sans-serif; /* Add sans-serif as a fallback */
+    align-items: center;
+    
 }
 
 .image {
     width: 40px;
     height: 40px;
+    vertical-align: middle;
 }
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: hsl(54, 37%, 54%);
+    background: transparent;
+    backdrop-filter: blur(20px);
+    /*background-color: hsl(54, 37%, 54%);*/
+    
     width: 100%;
     
     padding: 0 2em;
@@ -43,7 +49,11 @@ body {
     top: 0;
     z-index: 100;
 }
-
+.login-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+}
 .navbar ul {
     display: flex;
     align-items: center;
@@ -67,10 +77,21 @@ body {
 
 
 
-.NavButton {
+.NavButton, .NavLogin  {
     font-size: 20px;
     font-weight: bold;
     color: white;
+    align-items: center; 
+    
+}
+
+.NavRegister, .Navlogout {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(78, 59, 37);
+    color: rgb(189, 32, 32);
+    border: 4px solid white;
+    border-radius: 12px;
 }
 
 .navbar a {
@@ -79,6 +100,7 @@ body {
     padding: 15px 20px;
     display: block;
 }
+
 
 .navbar a:hover {
     background-color: hsl(0, 59%, 70%);

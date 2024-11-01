@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
                     <li><a href="logout.php">Logout</a></li>
                 <?php else: ?>
-                    <li><a class="NavButton" href="login.php">Login</a></li>
+                    <li><a class="NavButton" href="login.php" >Login</a></li>
                     <li><a class="NavButton" href="register.php">Register</a></li>
                 <?php endif; ?>
                 <li class="cart">

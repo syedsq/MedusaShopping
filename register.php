@@ -52,7 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-wrap: wrap;
             width: 400px;
             height: 550px;
-            background-image:linear-gradient(-225deg, #fafde3 50%, #ffe6e6 50%);
+            
+            /*background-image:linear-gradient(-225deg, #fafde3 50%, #ffe6e6 50%);
+            */
+            background: transparent;
+            backdrop-filter: blur(20px);
+            
             /*background: transparent;*/
             border: 2px solid rgba(255, 255,255 ,0.5);
             border-radius: 20px;
@@ -62,9 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
 </head>
 <body>
-        <!-- Navigation Bar -->
-        <!-- Navigation Bar -->
-        <nav class="navbar">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
         <ul>
             <!-- Logo on the left -->
             <li class="logo">
@@ -78,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
                     <li><a href="logout.php">Logout</a></li>
                 <?php else: ?>
-                    <li><a class="NavButton" href="login.php">Login</a></li>
-                    <li><a class="NavButton" href="register.php">Register</a></li>
+                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
+                    <li><a class="NavRegister" href="register.php">Register</a></li>
                 <?php endif; ?>
                 <li class="cart">
                     <a href="cart.php">
@@ -100,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <?php endif; ?>
                     </div>
                 </li>
+                
             </div>
         </ul>
     </nav>

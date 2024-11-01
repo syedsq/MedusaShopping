@@ -58,8 +58,8 @@ if (isset($_SESSION['cart'])) {
                     <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
                     <li><a href="logout.php">Logout</a></li>
                 <?php else: ?>
-                    <li><a class="NavButton" href="login.php">Login</a></li>
-                    <li><a class="NavButton" href="register.php">Register</a></li>
+                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
+                    <li><a class="NavRegister" href="register.php">Register</a></li>
                 <?php endif; ?>
                 <li class="cart">
                     <a href="cart.php">
