@@ -45,6 +45,7 @@ if (isset($_SESSION['cart'])) {
         
     <!-- Navigation Bar -->
     <nav class="navbar">
+        
         <ul>
             <!-- Logo on the left -->
             <li class="logo">
@@ -52,6 +53,11 @@ if (isset($_SESSION['cart'])) {
                     <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym</a>
             </li>
             <!-- Links on the right -->
+            <li class="toggle-button">
+                <a href="#">
+                    <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
+                </a>
+            </li>
             <div class="nav-items">
                 <li><a class="NavButton" href="product.php">Browse</a></li>
                 <?php if ($is_logged_in): ?>
@@ -103,6 +109,6 @@ if (isset($_SESSION['cart'])) {
     <!-- Close the database connection -->
     <?php $conn->close(); ?>
     <script src="JavaScript/cart.js"></script>
-
+    <script src="JavaScript/toggle.js"></script>                   
 </body>
 </html>

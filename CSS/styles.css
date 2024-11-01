@@ -41,7 +41,6 @@ body {
     background: transparent;
     backdrop-filter: blur(20px);
     /*background-color: hsl(54, 37%, 54%);*/
-    
     width: 100%;
     
     padding: 0 2em;
@@ -199,6 +198,50 @@ body {
 .view-cart:hover {
     background-color: #0056b3; /* Darken background on hover */
 }
+
+
+.toggle-button {
+    position: absolute;
+    
+    right: 0rem;
+    display: none;
+    padding-right: 5%;
+    
+}
+
+
+@media (max-width: 500px) {
+    .toggle-button {
+        display: flex;
+        
+    }
+    .nav-items {
+        display: none;
+        width: 100%;
+    }
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .navbar ul {
+        flex-direction: column;
+        width: 100%;
+    }
+    .nav-items li {
+        text-align: center;
+        padding: 0.5rem 1rem;
+    }
+    .navButton{width: 100%;}
+    .cart-preview {
+        display: none !important;}
+    /* Show nav-items when toggle button is active */
+    .nav-items.active {
+        width: 100%;
+        padding: 1rem;
+        flex-direction: column;
+        display: flex;
+     }
+     }
 
 /* Product Table */
 table {
