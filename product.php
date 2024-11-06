@@ -29,7 +29,61 @@ if (isset($_SESSION['cart'])) {
         <?php include 'CSS/styles.css'; ?>
         body {
             background-image: url('background/gymbackground.jpeg');
-}
+        }
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+    
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 250px;
+            text-align: center;
+            background: transparent;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-image {
+            width: 250px;
+            height: 250px;
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .price {
+            font-size: 1.2em;
+            color: #555;
+            margin: 8px 0;
+        }
+
+        .product-card button {
+            background-color: white;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .product-card button:hover {
+            background-color: black;
+        }
+    
     </style>
 
     <!-- Include jQuery and DataTables JS -->
@@ -92,17 +146,10 @@ if (isset($_SESSION['cart'])) {
 
     <!-- Product Table -->
     <h1>Welcome to Our Online Store</h1>
-    <table id="itemsTable" class="display">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price ($)</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
+
+
+
+        <div class="product-container">
             <?php
             // Fetch products from the database
             $sql = "SELECT id, name, description, price, image FROM products";
@@ -111,24 +158,25 @@ if (isset($_SESSION['cart'])) {
             if ($result && $result->num_rows > 0):
                 while ($row = $result->fetch_assoc()):
             ?>
-                <tr>
-                    <td><img src="<?php echo htmlspecialchars($row['image']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>" width="100"></td>
-                    <td><?php echo htmlspecialchars($row['name']); ?></td>
-                    <td><?php echo htmlspecialchars($row['description']); ?></td>
-                    <td><?php echo number_format($row['price'], 2); ?></td>
-                    <td>
-                        <form action="add_to_cart.php" method="post">
-                            <input type="hidden" name="product_id" value="<?php echo (int)$row['id']; ?>">
-                            <input type="number" name="quantity" value="1" min="1" max="10">
-                            <input type="submit" value="Add to Cart">
-                        </form>
-                    </td>
-                </tr>
+            <div class="product-card">
+                <img class="product-image" src="Product-images/<?php echo htmlspecialchars($row['image']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>">                    <td><?php echo htmlspecialchars($row['name']); ?></td>
+                <div class="product-info">    
+                <h2><?php echo htmlspecialchars($row['name']); ?></h2>
+                <p><?php echo htmlspecialchars($row['description']); ?></p>
+                <div class="price"><?php echo number_format($row['price'], 2); ?></div>
+                
+                <form action="add_to_cart.php" method="post">
+                    <input type="hidden" name="product_id" value="<?php echo (int)$row['id']; ?>">
+                    <input type="number" name="quantity" value="1" min="1" max="10">
+                    <input type="submit" value="Add to Cart">
+                </form>
+                </div>
+                </div>
             <?php endwhile; else: ?>
-                <tr><td colspan="5">No products found.</td></tr>
+                <p>No products found.</p>
             <?php endif; ?>
-        </tbody>
-    </table>
+        
+        </div>
 
     <!-- Close the database connection -->
     <?php $conn->close(); ?>
