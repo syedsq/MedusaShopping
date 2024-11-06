@@ -27,6 +27,9 @@ if (isset($_SESSION['cart'])) {
     
     <style>
         <?php include 'CSS/styles.css'; ?>
+        body {
+            background-image: url('background/gymbackground.jpeg');
+}
     </style>
 
     <!-- Include jQuery and DataTables JS -->
