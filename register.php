@@ -3,7 +3,6 @@
 session_start();
 include 'config.php';  // Include database connection
 
-
 // Check if the user is logged in
 $is_logged_in = isset($_SESSION['user_id']);
 
@@ -21,20 +20,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);  // Hash the password for security
     
-    // Insert user data into the users table
-    $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sss", $username, $email, $password);
-    
-    if ($stmt->execute()) {
-        echo "Registration successful! You can now <a href='login.php'>login</a>.";
+    // Check if the email already exists
+    $checkEmailSql = "SELECT id FROM users WHERE email = ?";
+    $checkStmt = $conn->prepare($checkEmailSql);
+    $checkStmt->bind_param("s", $email);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+
+    if ($checkStmt->num_rows > 0) {
+        // Email already exists
+        echo "Error: An account with this email already exists. <a href='login.php'>Log in</a> instead.";
     } else {
-        echo "Error: " . $stmt->error;
+        // Insert user data into the users table
+        $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sss", $username, $email, $password);
+        
+        if ($stmt->execute()) {
+            echo "Registration successful! You can now <a href='login.php'>log in</a>.";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        $stmt->close();
     }
-    
-    $stmt->close();
+
+    $checkStmt->close();
     $conn->close();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -111,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class = "border">
         <div class="form-box-login">
             <h2>Register a new account</h2>
-            <form action="login.php" method="POST">
+            <form action="register.php" method="POST">
                 <div class ="input-box">
                     <span class="icon"></span>
                     <input type = "email" name="email" required>

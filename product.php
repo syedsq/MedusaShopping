@@ -20,20 +20,36 @@ if (isset($_SESSION['cart'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medusa Gym</title>
+    <title>Product page</title>
     
     <!-- Include DataTables CSS and other styles -->
     <link rel="stylesheet" type="text/css" href="CSS/styles.css">
     
     <style>
-        <?php include 'CSS/styles.css'; ?>
+        
         body {
+            background-repeat:no-repeat ;
+            background-size: cover;
+            background-attachment: fixed;
             background-image: url('background/gymbackground.jpeg');
+            display: flex;
+
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .welcome-statement{
+            position: absolute;
+            justify-content: center;
+            z-index: 3;
+            left:0
         }
         .product-container {
             display: flex;
             flex-wrap: wrap;
+            /*lex-direction: column;*/
             gap: 16px;
+            z-index:2;
             justify-content: center;
             padding: 20px;
         }
@@ -70,8 +86,8 @@ if (isset($_SESSION['cart'])) {
             margin: 8px 0;
         }
 
-        .product-card button {
-            background-color: white;
+        .product-card .button {
+            background-color:#33b249 ;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -80,8 +96,8 @@ if (isset($_SESSION['cart'])) {
             margin-top: 8px;
         }
 
-        .product-card button:hover {
-            background-color: black;
+        .product-card .button:hover {
+            background-color: darkcyan;
         }
     
     </style>
@@ -93,7 +109,7 @@ if (isset($_SESSION['cart'])) {
     <!-- Initialize DataTables -->
     <script>
     $(document).ready(function() {
-        $('#itemsTable').DataTable();
+        $('#itemstable').DataTable();
     });
     </script>
     
@@ -102,8 +118,8 @@ if (isset($_SESSION['cart'])) {
 <body >
     
     <!-- Navigation Bar -->
-        <!-- Navigation Bar -->
-        <nav class="navbar">
+   
+    <nav class="navbar">
         <ul>
             <!-- Logo on the left -->
             <li class="logo">
@@ -111,6 +127,12 @@ if (isset($_SESSION['cart'])) {
                     <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym</a>
             </li>
             <!-- Links on the right -->
+            <li class="toggle-button">
+                <a href="#">
+                    <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
+                </a>
+            </li>
+            
             <div class="nav-items">
                 <li><a class="NavButton" href="product.php">Browse</a></li>
                 <?php if ($is_logged_in): ?>
@@ -139,46 +161,82 @@ if (isset($_SESSION['cart'])) {
                     <?php endif; ?>
                     </div>
                 </li>
-                
             </div>
+            
         </ul>
     </nav>
+    
+    <!-- Add the Search Form above the product table -->
+<form method="GET" action="product.php">
+    <input type="text" name="search_query" placeholder="Search products">
+    <button type="submit">Search</button>
+</form>
 
-    <!-- Product Table -->
-    <h1>Welcome to Our Online Store</h1>
+<!-- Product Table -->
+<div class="product-container">
+    <Table id="itemstable" class="display">
+    <?php
+    // Check if a search query is provided
+    $searchQuery = isset($_GET['search_query']) ? $_GET['search_query'] : '';
 
+    // Database connection (replace with your actual database credentials)
+    $servername = "localhost";
+    $sql ="SELECT id,name, description, price, image FROM products";
 
+    $result = $conn->query($sql);
 
-        <div class="product-container">
-            <?php
-            // Fetch products from the database
-            $sql = "SELECT id, name, description, price, image FROM products";
-            $result = $conn->query($sql);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
 
-            if ($result && $result->num_rows > 0):
-                while ($row = $result->fetch_assoc()):
-            ?>
-            <div class="product-card">
-                <img class="product-image" src="Product-images/<?php echo htmlspecialchars($row['image']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>">                    <td><?php echo htmlspecialchars($row['name']); ?></td>
-                <div class="product-info">    
-                <h2><?php echo htmlspecialchars($row['name']); ?></h2>
-                <p><?php echo htmlspecialchars($row['description']); ?></p>
-                <div class="price"><?php echo number_format($row['price'], 2); ?></div>
-                
-                <form action="add_to_cart.php" method="post">
-                    <input type="hidden" name="product_id" value="<?php echo (int)$row['id']; ?>">
-                    <input type="number" name="quantity" value="1" min="1" max="10">
-                    <input type="submit" value="Add to Cart">
-                </form>
-                </div>
-                </div>
-            <?php endwhile; else: ?>
-                <p>No products found.</p>
-            <?php endif; ?>
+    // SQL query to search products based on the search term or show all products if no search term is entered
+    if ($searchQuery) {
+        $sql = "SELECT id, name, description, price, image FROM products WHERE name LIKE ? OR description LIKE ?";
+        $stmt = $conn->prepare($sql);
+        $searchTerm = "%" . $searchQuery . "%";
+        $stmt->bind_param("ss", $searchTerm, $searchTerm);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    } else {
+        // If no search term is entered, show all products
+        $sql = "SELECT id, name, description, price, image FROM products";
+        $result = $conn->query($sql);
+    }
+
+    if ($result && $result->num_rows > 0):
+        while ($row = $result->fetch_assoc()):
+    ?>
+    <div class="product-card">
+        <img class="product-image" src="Product-images/<?php echo htmlspecialchars($row['image']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?> photo"> 
+        <div class="product-info">    
+        <h2><?php echo htmlspecialchars($row['name']); ?></h2>
+        <!--<p><?php echo htmlspecialchars($row['description']); ?></p> -->
+        <div class="price"><?php echo number_format($row['price'], 2); ?></div>
         
+        <form action="add_to_cart.php" method="post">
+            <input type="hidden" name="product_id" value="<?php echo (int)$row['id']; ?>">
+            <input type="number" name="quantity" value="1" min="1" max="10">
+            <input class="button" type="submit" value="Add to Cart">
+        </form>
         </div>
+    </div>
+    <?php 
+        endwhile;
+    else: 
+    ?>
+        <p>No products found.</p>
+    <?php 
+    endif;
+
+    if ($searchQuery) $stmt->close();
+     
+    ?>
+    </Table>
+</div>
 
     <!-- Close the database connection -->
     <?php $conn->close(); ?>
+    <script src="JavaScript/cart.js"></script>
+    <script src="JavaScript/toggle.js"></script>  
 </body>
 </html>

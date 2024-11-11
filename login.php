@@ -32,9 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['user_id'] = $user_id;
         $_SESSION['username'] = $username;
         header("Location: index.php");  // Redirect to homepage after successful login
+        
         exit();
     } else {
         echo "Invalid email or password.";
+        echo $username, $password;
     }
     
     $stmt->close();
@@ -122,12 +124,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="remember-forgot">
                     <label><input type= "checkbox">Remember my account</label>
                 </div>
-                <button type="submit" class="btn">login</button>
+                <button type="submit" value ="Login" class="btn">Login</button>
                 <div class ="login-register">
                     <p>Don't have an account?<a href="register.php" class="register-link"> Register here</a></p>
                 </div>
             </form>
-            
         </div>
     </div>
 </body>
