@@ -8,7 +8,7 @@ if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
     $quantity = $_POST['quantity'];
 
     // Fetch product details from the database
-    $sql = "SELECT id, name, price FROM products WHERE id = ?";
+    $sql = "SELECT id, name, price, quantity FROM products WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $product_id);
     $stmt->execute();
@@ -16,22 +16,37 @@ if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
     $product = $result->fetch_assoc();
     
     if ($product) {
-        // Store the product in the session cart
-        if (isset($_SESSION['cart'][$product_id])) {
-            // Update quantity if product already in cart
-            $_SESSION['cart'][$product_id]['quantity'] += $quantity;
-        } else {
-            // Add product to cart if not already added
-            $_SESSION['cart'][$product_id] = [
-                'name' => $product['name'],
-                'price' => $product['price'],
-                'quantity' => $quantity
-            ];
-        }
+        $available_quantity = $product['quantity']; // Get the available quantity
         
-        // Redirect back to the homepage (index.php) after adding to cart
-        header("Location: product.php");
-        exit();
+        // Check if there's enough stock
+        if ($available_quantity >= $quantity) {
+            // Store the product in the session cart
+            if (isset($_SESSION['cart'][$product_id])) {
+                // Update quantity if product already in cart
+                $_SESSION['cart'][$product_id]['quantity'] += $quantity;
+            } else {
+                // Add product to cart if not already added
+                $_SESSION['cart'][$product_id] = [
+                    'name' => $product['name'],
+                    'price' => $product['price'],
+                    'quantity' => $quantity
+                ];
+            }
+
+            // Reduce the quantity in the database
+            $new_quantity = $available_quantity - $quantity;
+            $update_sql = "UPDATE products SET quantity = ? WHERE id = ?";
+            $update_stmt = $conn->prepare($update_sql);
+            $update_stmt->bind_param("ii", $new_quantity, $product_id);
+            $update_stmt->execute();
+
+            // Redirect back to the homepage (or product page)
+            header("Location: product.php");
+            exit();
+        } else {
+            // If not enough stock, show an error message
+            echo "Not enough stock available. Only " . $available_quantity . " items left.";
+        }
     } else {
         echo "Product not found.";
     }
@@ -44,8 +59,8 @@ if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
     }
     if (isset($_POST['quantity'])) {
         echo "Error quantity.";
-    }else {
-        echo "no idea";
+    } else {
+        echo "Unknown error.";
     }
 }
 ?>

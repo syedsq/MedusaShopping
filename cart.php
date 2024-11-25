@@ -1,6 +1,15 @@
 <?php
 session_start();
 include 'config.php';  // Include database connection
+function redirectToRemoveItem($product_id, $destination = 'remove_from_cart.php') {
+    // Generate a hidden form and redirect using JavaScript
+    echo "<form id='redirect_form' action='" . htmlspecialchars($destination) . "' method='POST' style='display: none;'>
+            <input type='hidden' name='product_id' value='" . htmlspecialchars($product_id) . "'>
+          </form>
+          <script>document.getElementById('redirect_form').submit();</script>";
+    exit();
+}
+
 
 // Check if cart is empty
 if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
@@ -14,19 +23,35 @@ $tax_rate = 0.0825;  // 8.25% tax rate
 
 // Update cart items or remove items
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['update_cart'])) {
-        // Update item quantities
-        foreach ($_POST['quantity'] as $product_id => $quantity) {
-            if ($quantity == 0) {
-                unset($_SESSION['cart'][$product_id]);  // Remove item if quantity is 0
-            } else {
-                $_SESSION['cart'][$product_id]['quantity'] = $quantity;
+    // Update Cart
+    //if (isset($_POST['update_cart'])) {
+        // Ensure 'quantity' is an array before using it in foreach
+       
+            // Loop through each product's quantity in the cart
+            foreach ($_POST['quantity'] as $product_id => $quantity) {
+                
+
+                $currentQuantity = $_SESSION['cart'][$product_id]['quantity'];
+
+                // If quantity is set to 0, remove the item
+                if ($quantity == 0) {
+                    redirectToRemoveItem($product_id);
+                } else {
+                    // Update cart using the function
+                    $_SESSION['cart'][$product_id]['quantity'] = $quantity;
+
+                }
+
             }
-        }
-    } elseif (isset($_POST['remove_item'])) {
-        // Remove an item from the cart
+    //}
+
+    // Handle item removal action
+    if (isset($_POST['remove_item'])) {
         $product_id = $_POST['product_id'];
-        unset($_SESSION['cart'][$product_id]);
+    
+        // Call the function to redirect
+        redirectToRemoveItem($product_id);
+    
     }
 }
 ?>
