@@ -34,15 +34,12 @@ if (isset($_SESSION['cart'])) {
             background-attachment: fixed;
         }
         <?php include 'CSS/styles.css'; ?>
+        
     </style>
 
     <!-- Include jQuery and DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-    
-</head>
-<body class ="main-page-body">
-        
     <!-- Navigation Bar -->
     <nav class="navbar">
         
@@ -62,7 +59,8 @@ if (isset($_SESSION['cart'])) {
                 <li><a class="NavButton" href="product.php">Browse</a></li>
                 <?php if ($is_logged_in): ?>
                     <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
-                    <li><a href="logout.php">Logout</a></li>
+                    <li><a class ="NavUserProfile" href="user-profile.php">My profile</a></li>
+                    <li><a class ="NavLogout" href="logout.php">Logout</a></li>
                 <?php else: ?>
                     <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
                     <li><a class="NavRegister" href="register.php">Register</a></li>
@@ -90,6 +88,10 @@ if (isset($_SESSION['cart'])) {
             </div>
         </ul>
     </nav>
+</head>
+<body class ="main-page-body">
+        
+    
                     
 
 
