@@ -26,7 +26,7 @@ if (isset($_SESSION['cart'])) {
     <link rel="stylesheet" type="text/css" href="CSS/styles.css">
     
     <style>
-        
+        <?php include 'CSS/styles.css'; ?>
         body {
             background-repeat:no-repeat ;
             background-size: cover;
@@ -169,14 +169,9 @@ if (isset($_SESSION['cart'])) {
         $('#itemstable').DataTable();
     });
     </script>
-    
-    
-</head>
-<body >
-    
     <!-- Navigation Bar -->
-   
     <nav class="navbar">
+        
         <ul>
             <!-- Logo on the left -->
             <li class="logo">
@@ -189,12 +184,12 @@ if (isset($_SESSION['cart'])) {
                     <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
                 </a>
             </li>
-            
             <div class="nav-items">
                 <li><a class="NavButton" href="product.php">Browse</a></li>
                 <?php if ($is_logged_in): ?>
                     <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
-                    <li><a href="logout.php">Logout</a></li>
+                    <li><a class ="NavUserProfile" href="user-profile.php">My profile</a></li>
+                    <li><a class ="NavLogout" href="logout.php">Logout</a></li>
                 <?php else: ?>
                     <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
                     <li><a class="NavRegister" href="register.php">Register</a></li>
@@ -218,10 +213,16 @@ if (isset($_SESSION['cart'])) {
                     <?php endif; ?>
                     </div>
                 </li>
+                
             </div>
-            
         </ul>
     </nav>
+    
+</head>
+<body >
+    
+    
+   
     
     <div class="body1">
             <!-- Add the Search Form above the product table -->

@@ -1,6 +1,19 @@
 <?php
 session_start();
 include 'config.php';  // Include database connection
+
+// Check if the user is logged in
+$is_logged_in = isset($_SESSION['user_id']);
+
+// Count the total number of items in the cart
+$cart_item_count = 0;
+if (isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $item) {
+        $cart_item_count += $item['quantity'];  // Sum up quantities of all items
+    }
+}
+
+
 function redirectToRemoveItem($product_id, $destination = 'remove_from_cart.php') {
     // Generate a hidden form and redirect using JavaScript
     echo "<form id='redirect_form' action='" . htmlspecialchars($destination) . "' method='POST' style='display: none;'>
@@ -134,7 +147,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .back-button:hover {
             background-color: #0056b3;
         }
+        
+            
+
     </style>
+
+    <!-- Navigation Bar -->
+    
 </head>
 <body>
     <h1>Your Shopping Cart</h1>

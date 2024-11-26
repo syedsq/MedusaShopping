@@ -1,0 +1,89 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 10%;
+    
+    /*background-color: thistle;*/
+}
+
+
+
+.user-profile-picture {
+    text-align: center;
+    
+}
+
+.user-profile-picture img {
+    margin-bottom: 15px;
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: bold;
+   
+}
+
+.name {
+    width: 100%;
+    display: flex;
+    gap: 10%;
+}
+.name .firstname, .lastname{
+    width: 45%;
+}
+.display.email {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.display.email:hover {
+    text-decoration: underline;
+}
+.profile {
+    width: 90%;
+}
+
+.Profile .title {
+    margin-bottom: 20px;
+}
+
+.Profile input {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.Profile label {
+    font-size: 14px;
+    color: #333;
+}
+
+.Profile .btn-primary {
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.Profile .btn-primary:hover {
+    background-color: #5248c1;
+}
+
+.past-order h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #333;
+}
+
+.past-order p {
+    color: #555;
+    line-height: 1.6;
+}
