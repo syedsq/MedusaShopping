@@ -86,7 +86,7 @@ if (isset($_SESSION['cart'])) {
 
         
         <div class="user-profile-picture">
-            <img class="user-photo" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+            <img class="user-photo" width="150px">
             <span class="user-name">Name</span>
             <a class="display email" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" >email@gmail.com</a>
         </div>
