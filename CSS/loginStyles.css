@@ -11,7 +11,11 @@ body{
     background-attachment: fixed;
     
 }
-
+.login-register-operation{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
 
 .border {
     
@@ -39,6 +43,24 @@ body{
     font-size:2em;
     color: rgb(9, 20, 20);
     text-align: center;
+}
+.error-message {
+    color: red;
+    margin: 10px 0;
+    font-size: 14px;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border: 1px solid red;
+    border-radius: 5px;
+}
+.success-message {
+    color: green;
+    margin: 10px 0;
+    font-size: 14px;
+    background-color: #e6ffe7;
+    padding: 10px;
+    border: 1px solid green;
+    border-radius: 5px;
 }
 .input-box {
     position: relative;

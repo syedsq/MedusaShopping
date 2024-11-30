@@ -1,7 +1,6 @@
-<!--backend logic -->
 <?php
 session_start();
-include 'config.php';  // Include database connection
+include 'config.php'; // Include database connection
 
 // Check if the user is logged in
 $is_logged_in = isset($_SESSION['user_id']);
@@ -10,45 +9,59 @@ $is_logged_in = isset($_SESSION['user_id']);
 $cart_item_count = 0;
 if (isset($_SESSION['cart'])) {
     foreach ($_SESSION['cart'] as $item) {
-        $cart_item_count += $item['quantity'];  // Sum up quantities of all items
+        $cart_item_count += $item['quantity']; // Sum up quantities of all items
     }
 }
+
+$error_message = '';
+$success_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get the form data
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);  // Hash the password for security
-    
-    // Check if the email already exists
-    $checkEmailSql = "SELECT id FROM users WHERE email = ?";
-    $checkStmt = $conn->prepare($checkEmailSql);
-    $checkStmt->bind_param("s", $email);
-    $checkStmt->execute();
-    $checkStmt->store_result();
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
 
-    if ($checkStmt->num_rows > 0) {
-        // Email already exists
-        echo "Error: An account with this email already exists. <a href='login.php'>Log in</a> instead.";
+    // Validate form data
+    if ($password !== $confirm_password) {
+        $error_message = "Passwords do not match. Please try again.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_message = "Invalid email format. Please use a valid email.";
     } else {
-        // Insert user data into the users table
-        $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sss", $username, $email, $password);
-        
-        if ($stmt->execute()) {
-            echo "Registration successful! You can now <a href='login.php'>log in</a>.";
+        // Check if the email already exists
+        $checkEmailSql = "SELECT id FROM users WHERE email = ?";
+        $checkStmt = $conn->prepare($checkEmailSql);
+        $checkStmt->bind_param("s", $email);
+        $checkStmt->execute();
+        $checkStmt->store_result();
+
+        if ($checkStmt->num_rows > 0) {
+            // Email already exists
+            $error_message = "An account with this email already exists. <a href='login.php'>Log in</a> instead.";
         } else {
-            echo "Error: " . $stmt->error;
+            // Hash the password for security
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Insert user data into the users table
+            $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sss", $username, $email, $hashed_password);
+
+            if ($stmt->execute()) {
+                $success_message = "Registration successful! You can now <a href='login.php'>log in</a>.";
+            } else {
+                $error_message = "An error occurred: " . $stmt->error;
+            }
+
+            $stmt->close();
         }
 
-        $stmt->close();
+        $checkStmt->close();
     }
 
-    $checkStmt->close();
     $conn->close();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             position: relative;
             text-wrap: wrap;
             width: 400px;
-            height: 550px;
+            height: 700px;
             
             /*background-image:linear-gradient(-225deg, #fafde3 50%, #ffe6e6 50%);
             */
@@ -79,8 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             justify-content: center;
             align-items: center;}   
     </style>
-</head>
-<body>
     <!-- Navigation Bar -->
     <nav class="navbar">
         <ul>
@@ -122,37 +133,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </ul>
     </nav>
-    <div class = "border">
-        <div class="form-box-login">
-            <h2>Register a new account</h2>
-            <form action="register.php" method="POST">
-                <div class ="input-box">
-                    <span class="icon"></span>
-                    <input type = "email" name="email" required>
-                    <label> Email</label>
-                </div>
-                <div class ="input-box">
-                    <span class="icon"></span>
-                    <input type ="text" name="username" required>
-                    <label>Username</label>
+</head>
+<body>
+    <div class="login-register-operation">                         
+        <div class="border">
+            <div class="form-box-login">
+                <h2>Register a new account</h2>
 
-                <div class ="input-box">
-                    <span class="icon"></span>
-                    <input type ="password" name="password" required >
-                    <label>Password</label>
-                </div>
+                <!-- Display error or success messages -->
                 
-                <button type="submit" class="btn">Register</button>
-                <div class ="login-register">
-                    <p>Already have an account?<a href="login.php" class="register-link"> Sign-in here</a></p>
-                </div>
-            </form>
-            
+
+                <form action="register.php" method="POST">
+                    <div class="input-box">
+                        <input type="email" name="email" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="text" name="username" required>
+                        <label>Username</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" name="password" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" name="confirm_password" required>
+                        <label>Re-enter Password</label>
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                    <div class="login-register">
+                        <p>Already have an account? <a href="login.php">Sign in here</a></p>
+                    </div>
+                </form>
+            </div>
         </div>
+        <?php if (!empty($error_message)): ?>
+            <div class="error-message"><?php echo $error_message; ?></div>
+        <?php elseif (!empty($success_message)): ?>
+            <div class="success-message"><?php echo $success_message; ?></div>
+        <?php endif; ?>                    
     </div>
 
-    <div class="form-container">
+    <script src="JavaScript/cart.js">
+        $(document).ready(function() {
+            $("form").submit(function(event) {
+                const password = $("input[name='password']").val();
+                const confirmPassword = $("input[name='confirm_password']").val();
 
-    <script src="JavaScript/cart.js"></script>
+                if (password !== confirmPassword) {
+                    event.preventDefault();
+                    $(".error-message").remove();
+                    $(".form-box-login").prepend('<div class="error-message">Passwords do not match. Please try again.</div>');
+                }
+            });
+        });
+    </script>
+    </script>
 </body>
 </html>

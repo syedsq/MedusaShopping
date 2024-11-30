@@ -14,31 +14,31 @@ if (isset($_SESSION['cart'])) {
         $cart_item_count += $item['quantity'];  // Sum up quantities of all items
     }
 }
+$error_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get the form data
     $email = $_POST['email'];
     $password = $_POST['password'];
-    
-    // Check if the user exists
+
     $sql = "SELECT id, username, password FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->bind_result($user_id, $username, $hashed_password);
-    
-    if ($stmt->fetch() && password_verify($password, $hashed_password)) {
-        // Set session and redirect
-        $_SESSION['user_id'] = $user_id;
-        $_SESSION['username'] = $username;
-        header("Location: index.php");  // Redirect to homepage after successful login
-        
-        exit();
+
+    if ($stmt->fetch()) {
+        if (password_verify($password, $hashed_password)) {
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['username'] = $username;
+            header("Location: index.php");
+            exit();
+        } else {
+            $error_message = "Incorrect password. Please try again.";
+        }
     } else {
-        echo "Invalid email or password.";
-        echo $username, $password;
+        $error_message = "No account found with that email. Please register.";
     }
-    
+
     $stmt->close();
     $conn->close();
 }
@@ -61,10 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 
     </script>
-
-</head>
-<body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <ul>
             <!-- Logo on the left -->
@@ -104,9 +100,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </ul>
     </nav>
-
-
-
+</head>
+<body>
+    <!-- Navigation Bar -->
+    
+    <div class="login-register-operation">                   
     <div class = "border">
         <div class="form-box-login">
             <h2>Login to your account</h2>
@@ -130,6 +128,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </form>
         </div>
+    </div>
+    <?php if (!empty($error_message)): ?>
+    <div class="error-message">
+        <?php echo $error_message; ?>
+    </div>
+    <?php endif; ?>
     </div>
 </body>
 
