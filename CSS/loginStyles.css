@@ -52,7 +52,18 @@ body{
     padding: 10px;
     border: 1px solid red;
     border-radius: 5px;
+    
 }
+
+.error-message a{
+    color: rgb(124, 9, 9);
+    text-decoration: none;
+    font-weight: 800;
+}
+.error-message a:hover{
+    text-decoration: underline;
+}
+
 .success-message {
     color: green;
     margin: 10px 0;
@@ -61,6 +72,15 @@ body{
     padding: 10px;
     border: 1px solid green;
     border-radius: 5px;
+    
+}
+.success-message a{
+    color: rgb(9, 124, 28);
+    text-decoration: none;
+    font-weight: 800;
+}
+.success-message a:hover{
+    text-decoration: underline;
 }
 .input-box {
     position: relative;

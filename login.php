@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $error_message = "Incorrect password. Please try again.";
         }
     } else {
-        $error_message = "No account found with that email. Please register.";
+        $error_message = "No account found with that email. Please <a href='register.php'>register</a>.";
     }
 
     $stmt->close();
