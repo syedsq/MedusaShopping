@@ -133,16 +133,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="wrapper">
-        <h1>Your Shopping Cart</h1>
+        
 
         <?php if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])): ?>
         <!-- Display empty cart message -->
-        <div class="empty-message">
-            <h2>Your cart is empty</h2>
-            <p>Looks like you haven't added anything yet.</p>
-            <a href="index.php">Go back to shopping</a>
-        </div>
+        <div class="group1">
+            <div class="motivation-poster">
+                <img src= "background/motivationposter1.jpg">
+            </div>
+            <div class="empty-message">
+                <h2>Your cart is empty</h2>
+                <p>Looks like you haven't added anything yet. Are you going to give up that easily?</p>
+                
+                <a href="product.php">Go back to shopping</a>
+            </div>
     <?php else: ?>
+        <h1>Your Shopping Cart</h1>
         <!-- Display cart contents if there are items -->
         <form action="cart.php" method="POST">
             <table>

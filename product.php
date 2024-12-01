@@ -58,6 +58,7 @@ $result = $conn->query($sql);
     
     <style>
         <?php include 'CSS/styles.css'; ?>
+        <?php include 'CSS/product.css'; ?>
         body {
             background-repeat:no-repeat ;
             background-size: cover;
@@ -65,124 +66,7 @@ $result = $conn->query($sql);
             background-image: url('background/background4.jpeg');
             display: flex;
         }
-        .body1 {
-            display: flex; 
-            width: 100%;
-            gap: 20px;
-            box-sizing: border-box;
-            padding: 20px;
-        }
-        .sidebar {
-            width: 20%;
-            min-width: 200px;
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            bottom: 0px;
-            background: transparent;
-            text-align: center;
-            display: grid;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-        }
-        .sidebar ul {
-            margin-top: 20px;
-        }
-        h1 {
-            margin-bottom: 20px;
-        }
-        .product-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin-left: 20%;
-            width: 80%;
-            gap: 16px;
-            z-index: 2;
-            justify-content: flex-start;
-            padding: 20px;
-        }
-        .product-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            width: 250px;
-            text-align: center;
-            background: transparent;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-        .product-card:hover {
-            transform: scale(1.05);
-        }
-        .product-image {
-            width: 250px;
-            height: 250px;
-        }
-        .product-info {
-            padding: 16px;
-        }
-        .price {
-            font-size: 1.2em;
-            color: black;
-            margin: 8px 0;
-        }
-        .product-card .button {
-            background-color: #33b249;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-top: 8px;
-        }
-        .product-card p {
-            display: none;
-        }
-        .product-card:hover p {
-            display: block;
-        }
-        .product-card .button:hover {
-            background-color: darkcyan;
-        }
-        .search {
-            width: 100%;
-            padding-top: 30%;
-            position: relative;
-            text-align: center;
-        }
-        .searchTerm {
-            width: 160px;
-            border: 3px solid #00B4CC;
-            border-right: none;
-            height: 40px;
-            border-radius: 5px 0 0 5px;
-            outline: none;
-            color: #9DBFAF;
-            margin: auto;
-        }
-        .searchTerm:focus {
-            color: black;
-        }
-        .searchButton {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #00B4CC;
-            background: #00B4CC;
-            text-align: center;
-            color: #fff;
-            border-radius: 0 5px 5px 0;
-        }
-        .search-icon {
-            width: 15px;
-            height: 15px;
-            text-align: center;
-        }
-        .product-quantity {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 10px;
-        }
+        
     </style>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -238,7 +122,9 @@ $result = $conn->query($sql);
 </head>
 <body>
     <div class="body1">
+        
         <div class="sidebar">
+            
             <div class="search">
                 <form method="GET" action="product.php">
                     <input type="text" class="searchTerm" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>" placeholder="What are you looking for?">
@@ -247,26 +133,31 @@ $result = $conn->query($sql);
                     </button>
                 </form>
             </div>
+
+
+            <form method="GET" action="product.php">
+                <input type="hidden" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>">
+                
+                <div class="filter-group">
+                    <label for="sort_by">Sort by:</label>
+                    <select name="sort_by" id="sort_by" onchange="this.form.submit()">
+                        <option value="">Select</option>
+                        <option value="price_asc" <?php echo isset($_GET['sort_by']) && $_GET['sort_by'] == 'price_asc' ? 'selected' : ''; ?>>Price: Low to High</option>
+                        <option value="price_desc" <?php echo isset($_GET['sort_by']) && $_GET['sort_by'] == 'price_desc' ? 'selected' : ''; ?>>Price: High to Low</option>
+                        <option value="name_asc" <?php echo isset($_GET['sort_by']) && $_GET['sort_by'] == 'name_asc' ? 'selected' : ''; ?>>Name: A to Z</option>
+                        <option value="name_desc" <?php echo isset($_GET['sort_by']) && $_GET['sort_by'] == 'name_desc' ? 'selected' : ''; ?>>Name: Z to A</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="show_available">
+                        <input type="checkbox" name="show_available" id="show_available" value="1" <?php echo isset($_GET['show_available']) && $_GET['show_available'] == '1' ? 'checked' : ''; ?> onchange="this.form.submit()"> 
+                        Show available items only
+                    </label>
+                </div>
+            </form>
             
-            <ul>
-                <form method="GET" action="product.php">
-                    <input type="hidden" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>">
-                    <li>
-                        <label for="sort_by">Sort by:</label>
-                        <select name="sort_by" id="sort_by" onchange="this.form.submit()">
-                            <option value="">Select</option>
-                            <option value="price_asc" <?php echo isset($_GET['sort_by']) && $_GET['sort_by'] == 'price_asc' ? 'selected' : ''; ?>>Price: Low to High</option>
-                            <option value="price_desc" <?php echo isset($_GET['sort_by']) && $_GET['sort_by'] == 'price_desc' ? 'selected' : ''; ?>>Price: High to Low</option>
-                            <option value="name_asc" <?php echo isset($_GET['sort_by']) && $_GET['sort_by'] == 'name_asc' ? 'selected' : ''; ?>>Name: A to Z</option>
-                            <option value="name_desc" <?php echo isset($_GET['sort_by']) && $_GET['sort_by'] == 'name_desc' ? 'selected' : ''; ?>>Name: Z to A</option>
-                        </select>
-                    </li>
-                    <li>
-                        <label for="show_available">Show available items only</label>
-                        <input type="checkbox" name="show_available" id="show_available" value="1" <?php echo isset($_GET['show_available']) && $_GET['show_available'] == '1' ? 'checked' : ''; ?> onchange="this.form.submit()">
-                    </li>
-                </form>
-            </ul>
+
         </div>
         <div class="product-container">
             <?php while ($row = $result->fetch_assoc()): ?>
@@ -299,6 +190,15 @@ $result = $conn->query($sql);
     <!-- Close the database connection -->
     <?php $conn->close(); ?>
     <script src="JavaScript/cart.js"></script>
-    <script src="JavaScript/toggle.js"></script>    
+    <script src="JavaScript/toggle.js">
+        const sidebar = document.getElementById('sidebar');
+        const toggleButton = document.getElementById('toggleSidebar');
+        const productContainer = document.querySelector('.product-container');
+
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            productContainer.classList.toggle('expanded');
+        });
+    </script>    
 </body>
 </html>
