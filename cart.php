@@ -16,10 +16,11 @@ if (isset($_SESSION['cart'])) {
 
 function redirectToRemoveItem($product_id, $destination = 'remove_from_cart.php') {
     // Generate a hidden form and redirect using JavaScript
-    echo "<form id='redirect_form' action='" . htmlspecialchars($destination) . "' method='POST' style='display: none;'>
+    $remove "<form id='redirect_form' action='" . htmlspecialchars($destination) . "' method='POST' style='display: none;'>
             <input type='hidden' name='product_id' value='" . htmlspecialchars($product_id) . "'>
           </form>
           <script>document.getElementById('redirect_form').submit();</script>";
+    echo $remove;
     exit();
 }
 
@@ -177,9 +178,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     ?>
                         <tr>
                             <td><?php echo htmlspecialchars($name); ?></td>
-                            <td>
-                                <input type="number" name="quantity[<?php echo $product_id; ?>]" value="<?php echo $item['quantity']; ?>" min="0">
-                            </td>
+                            
+                            <td><?php echo (int)$item['quantity']; ?></td>
+                            
                             <td><?php echo number_format($price, 2); ?></td>
                             <td><?php echo number_format($item_total, 2); ?></td>
                             <td>
@@ -192,10 +193,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <?php } ?>
                 </tbody>
             </table>
-
+<!--
             <div style="text-align: center; margin: 20px;">
                 <input type="submit" name="update_cart" value="Update Cart">
             </div>
+                    -->
         </form>
 
         <?php
