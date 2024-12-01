@@ -26,7 +26,7 @@ if (isset($_SESSION['cart'])) {
             background-repeat:no-repeat ;
             background-size: cover;
             background-attachment: fixed;
-            background-image: url('background/user-background1.jpg');
+            background-image: url('background/user-background2.jpg');
         }
         <?php include 'CSS/styles.css'; ?>
 
