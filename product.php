@@ -284,13 +284,21 @@ $result = $conn->query($sql);
                             }
                         ?>
                         </p>
-                        <?php if ($row['quantity'] > 0): ?>
-                            <button class="button">Add to Cart</button>
-                        <?php endif; ?>
+                        <form action="add_to_cart.php" method="post">
+                            <input type="hidden" name="product_id" value="<?php echo (int)$row['id']; ?>">
+                            <input type="number" name="quantity" value="1" min="1" max="<?php echo (int)$row['quantity']; ?>" 
+                                <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
+                            <input class="button" type="submit" value="Add to Cart" 
+                            <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
+                    </form>
                     </div>
                 </div>
             <?php endwhile; ?>
         </div>
     </div>
+    <!-- Close the database connection -->
+    <?php $conn->close(); ?>
+    <script src="JavaScript/cart.js"></script>
+    <script src="JavaScript/toggle.js"></script>    
 </body>
 </html>
