@@ -33,6 +33,7 @@ if (isset($_POST['product_id'])) {
         // Remove the item from the session
         unset($_SESSION['cart'][$product_id]);
         // Redirect back to the cart page
+         
         
     }
 }
