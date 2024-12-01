@@ -60,13 +60,12 @@ $result = $conn->query($sql);
         <?php include 'CSS/styles.css'; ?>
         <?php include 'CSS/product.css'; ?>
         body {
-            background-repeat:no-repeat ;
+            background-repeat: no-repeat;
             background-size: cover;
             background-attachment: fixed;
             background-image: url('background/background4.jpeg');
             display: flex;
         }
-        
     </style>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -85,17 +84,17 @@ $result = $conn->query($sql);
             </li>
             <li class="toggle-button">
                 <a href="#">
-                    <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
+                    <img class="image" src="icon-image/toggle-icon.png" alt="toggle" style="vertical-align: middle">
                 </a>
             </li>
             <div class="nav-items">
                 <li><a class="NavButton" href="product.php">Browse</a></li>
                 <?php if ($is_logged_in): ?>
                     <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
-                    <li><a class ="NavUserProfile" href="user-profile.php">My profile</a></li>
-                    <li><a class ="NavLogout" href="logout.php">Logout</a></li>
+                    <li><a class="NavUserProfile" href="user-profile.php">My profile</a></li>
+                    <li><a class="NavLogout" href="logout.php">Logout</a></li>
                 <?php else: ?>
-                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
+                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style="vertical-align: middle">Login</a></li>
                     <li><a class="NavRegister" href="register.php">Register</a></li>
                 <?php endif; ?>
                 <li class="cart">
@@ -122,9 +121,7 @@ $result = $conn->query($sql);
 </head>
 <body>
     <div class="body1">
-        
         <div class="sidebar">
-            
             <div class="search">
                 <form method="GET" action="product.php">
                     <input type="text" class="searchTerm" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>" placeholder="What are you looking for?">
@@ -134,10 +131,8 @@ $result = $conn->query($sql);
                 </form>
             </div>
 
-
             <form method="GET" action="product.php">
                 <input type="hidden" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>">
-                
                 <div class="filter-group">
                     <label for="sort_by">Sort by:</label>
                     <select name="sort_by" id="sort_by" onchange="this.form.submit()">
@@ -148,7 +143,6 @@ $result = $conn->query($sql);
                         <option value="name_desc" <?php echo isset($_GET['sort_by']) && $_GET['sort_by'] == 'name_desc' ? 'selected' : ''; ?>>Name: Z to A</option>
                     </select>
                 </div>
-
                 <div class="filter-group">
                     <label for="show_available">
                         <input type="checkbox" name="show_available" id="show_available" value="1" <?php echo isset($_GET['show_available']) && $_GET['show_available'] == '1' ? 'checked' : ''; ?> onchange="this.form.submit()"> 
@@ -156,9 +150,8 @@ $result = $conn->query($sql);
                     </label>
                 </div>
             </form>
-            
-
         </div>
+
         <div class="product-container">
             <?php while ($row = $result->fetch_assoc()): ?>
                 <div class="product-card">
@@ -167,21 +160,20 @@ $result = $conn->query($sql);
                         <h2><?php echo $row['name']; ?></h2>
                         <p class="product-description"><?php echo $row['description']; ?></p>
                         <div class="price"><?php echo '$' . number_format($row['price'], 2); ?></div>
-                        <p class="product-quantity"> <?php 
-                            if ($row['quantity'] > 0) {
-                                echo "In Stock: " . $row['quantity'];
-                            } else {
-                                echo "Out of Stock";
-                            }
-                        ?>
+                        <p class="product-quantity"> 
+                            <?php 
+                                if ($row['quantity'] > 0) {
+                                    echo "In Stock: " . $row['quantity'];
+                                } else {
+                                    echo "Out of Stock";
+                                }
+                            ?>
                         </p>
                         <form action="add_to_cart.php" method="post">
                             <input type="hidden" name="product_id" value="<?php echo (int)$row['id']; ?>">
-                            <input type="number" name="quantity" value="1" min="1" max="<?php echo (int)$row['quantity']; ?>" 
-                                <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
-                            <input class="button" type="submit" value="Add to Cart" 
-                            <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
-                    </form>
+                            <input type="number" name="quantity" value="1" min="1" max="<?php echo (int)$row['quantity']; ?>" <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
+                            <input class="button" type="submit" value="Add to Cart" <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
+                        </form>
                     </div>
                 </div>
             <?php endwhile; ?>
@@ -189,16 +181,5 @@ $result = $conn->query($sql);
     </div>
     <!-- Close the database connection -->
     <?php $conn->close(); ?>
-    <script src="JavaScript/cart.js"></script>
-    <script src="JavaScript/toggle.js">
-        const sidebar = document.getElementById('sidebar');
-        const toggleButton = document.getElementById('toggleSidebar');
-        const productContainer = document.querySelector('.product-container');
-
-        toggleButton.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
-            productContainer.classList.toggle('expanded');
-        });
-    </script>    
 </body>
 </html>

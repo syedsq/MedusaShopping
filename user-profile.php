@@ -2,17 +2,72 @@
 session_start();
 include 'config.php';  // Include database connection
 
-// Check if the user is logged in
-$is_logged_in = isset($_SESSION['user_id']);
-
-// Count the total number of items in the cart
-$cart_item_count = 0;
-if (isset($_SESSION['cart'])) {
-    foreach ($_SESSION['cart'] as $item) {
-        $cart_item_count += $item['quantity'];  // Sum up quantities of all items
-    }
+// Ensure the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    echo "You must be logged in to view your profile.";
+    exit();
 }
+
+$user_id = $_SESSION['user_id'];  // Logged-in user's ID
+$message = "";  // Feedback message
+
+// Initialize order details
+$first_name = $last_name = $address = $city = $state = $zip = "";
+
+// Fetch order details via a join with the `orders` table
+$sql = "
+    SELECT od.first_name, od.last_name, od.address, od.city, od.state, od.zip
+    FROM order_details od
+    JOIN orders o ON o.id = od.order_id
+    WHERE o.user_id = ?
+";
+$stmt = $conn->prepare($sql);
+
+if (!$stmt) {
+    die("SQL error during prepare: " . $conn->error);
+}
+
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($first_name, $last_name, $address, $city, $state, $zip);
+$stmt->fetch();
+$stmt->close();
+
+// Handle profile updates
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $address = $_POST['address'];
+    $city = $_POST['city'];
+    $state = $_POST['state'];
+    $zip = $_POST['zip'];
+
+    // Update the `order_details` table with new details
+    $update_sql = "
+        UPDATE order_details od
+        JOIN orders o ON o.id = od.order_id
+        SET od.first_name = ?, od.last_name = ?, od.address = ?, od.city = ?, od.state = ?, od.zip = ?
+        WHERE o.user_id = ?
+    ";
+    $update_stmt = $conn->prepare($update_sql);
+
+    if (!$update_stmt) {
+        die("SQL error during prepare: " . $conn->error);
+    }
+
+    $update_stmt->bind_param("ssssssi", $first_name, $last_name, $address, $city, $state, $zip, $user_id);
+
+    if ($update_stmt->execute()) {
+        $message = "Order details updated successfully!";
+    } else {
+        $message = "Error updating order details: " . $update_stmt->error;
+    }
+    $update_stmt->close();
+}
+
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,104 +78,73 @@ if (isset($_SESSION['cart'])) {
         <?php include 'CSS/profile.css'; ?>
         <?php include 'CSS/styles.css'; ?>
         body {
-            background-repeat:no-repeat ;
+            background-repeat:no-repeat;
             background-size: cover;
             background-attachment: fixed;
             background-image: url('background/user-background2.jpg');
         }
-        <?php include 'CSS/styles.css'; ?>
-
     </style>
-
-    <!-- Navigation Bar -->
+</head>
+<body>
     <nav class="navbar">
         <ul>
-            <!-- Logo on the left -->
             <li class="logo">
                 <a class="main_page" href="index.php">
                     <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym</a>
             </li>
-            <!-- Links on the right -->
             <li class="toggle-button">
                 <a href="#">
-                    <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
+                    <img class="image" src="icon-image/toggle-icon.png" alt="toggle" style="vertical-align: middle">
                 </a>
             </li>
             <div class="nav-items">
                 <li><a class="NavButton" href="product.php">Browse</a></li>
-                <?php if ($is_logged_in): ?>
-                    <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
-                    <li><a class ="NavUserProfile" href="user-profile.php">My profile</a></li>
-                    <li><a class ="NavLogout" href="logout.php">Logout</a></li>
-                <?php else: ?>
-                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
-                    <li><a class="NavRegister" href="register.php">Register</a></li>
-                <?php endif; ?>
-                <li class="cart">
-                    <a href="cart.php">
-                        <img src="icon-image/cart.png" alt="Cart">
-                        <?php if ($cart_item_count > 0): ?>
-                            <div class="cart-count"><?php echo $cart_item_count; ?></div>
-                        <?php endif; ?>
-                    </a>
-                    <div class="cart-preview" id="cart-preview">
-                    <h3>Cart Preview</h3>
-                    <ul id="cart-items">
-                        <!-- Dynamically generated cart items will go here -->
-                    </ul>
-                    <?php if ($cart_item_count > 0): ?>
-                    <a href="cart.php" class="view-cart">View Cart</a>
-                    <?php else: ?>
-                    <a href="product.php" class="view-cart">Browse our product</a>
-                    <?php endif; ?>
-                    </div>
-                </li>
-                
+                <li><span class="login_welcome">Welcome, <?php echo htmlspecialchars($first_name); ?>!</span></li>
+                <li><a class="NavLogout" href="logout.php">Logout</a></li>
             </div>
         </ul>
     </nav>
-</head>
 
-<body>
-
-        
-        <div class="user-profile-picture">
-            <img class="user-photo" width="150px">
-            <span class="user-name">Name</span>
-            <a class="display email" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" >email@gmail.com</a>
+    <div class="Profile">
+        <div class="title">
+            <h4>Order Details</h4>
         </div>
-        
-        
-        <div class="Profile">
-            <div class="title">
-                <h4 class="">Profile Settings</h4>
-            </div>
+        <form method="POST" action="">
             <div class="name">
-                <div class="firstname"><label class="labels">Name</label><input type="text" class="form-control" placeholder="First name" value=""></div>
-                <div class="lastname"><label class="labels">Surname</label><input type="text" class="form-control" value="" placeholder="Last Name"></div>
+                <div class="firstname">
+                    <label class="labels">First Name</label>
+                    <input type="text" name="first_name" value="<?php echo htmlspecialchars($first_name); ?>" required>
+                </div>
+                <div class="lastname">
+                    <label class="labels">Last Name</label>
+                    <input type="text" name="last_name" value="<?php echo htmlspecialchars($last_name); ?>" required>
+                </div>
             </div>
-            <div class="personal-info">
-                <div class="col-md-12"><label class="labels">Email</label><input type="email" class="form-control" placeholder="enter email id" value=""></div>
-                <div class="phone"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="Enter phone number" value=""></div>
-                <div class="address"><label class="labels">Address Line 1</label><input type="text" class="form-control" placeholder="Enter address line" value=""></div>
-                <div class="zipcode"><label class="labels">zipcode</label><input type="text" class="form-control" placeholder="Enter the zipcode" value=""></div>
-                <div class="city"><label class="labels">city</label><input type="text" class="form-control" placeholder="Enter your city" value=""></div>
+            <div class="address">
+                <label class="labels">Address</label>
+                <input type="text" name="address" value="<?php echo htmlspecialchars($address); ?>" required>
             </div>
-            <div class="row mt-3">
-                <div class="country"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value=""></div>
-                <div class="state"><label class="labels">State/Region</label><input type="text" class="form-control" value="" placeholder="state"></div>
+            <div class="city-state-zip">
+                <div class="city">
+                    <label class="labels">City</label>
+                    <input type="text" name="city" value="<?php echo htmlspecialchars($city); ?>" required>
+                </div>
+                <div class="state">
+                    <label class="labels">State</label>
+                    <input type="text" name="state" value="<?php echo htmlspecialchars($state); ?>" required>
+                </div>
+                <div class="zip">
+                    <label class="labels">Zip Code</label>
+                    <input type="text" name="zip" value="<?php echo htmlspecialchars($zip); ?>" required>
+                </div>
             </div>
             <div class="update-profile-button">
-                <button class="submit" type="submit" ><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Save Profile</a></button>
+                <button class="submit" type="submit">Save Changes</button>
             </div>
-        </div>
-        
-    
-        <div class="past-order">
-            <h4 class="">Past order</h4>
-            <p>This part display past order</p>
-        </div>
-    
-
-    
+        </form>
+        <?php if ($message): ?>
+            <p><?php echo htmlspecialchars($message); ?></p>
+        <?php endif; ?>
+    </div>
 </body>
+</html>
