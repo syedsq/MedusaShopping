@@ -31,12 +31,32 @@ if (isset($_SESSION['cart'])) {
             background-repeat:no-repeat ;
             background-size: cover;
             background-attachment: fixed;
-            background-image: url('background/gymbackground.jpeg');
+            background-image: url('background/background4.jpeg');
             display: flex;
 
         }
-        .body1{
-            display: grid;  
+        .body1 {
+            display: flex; /* Create a row layout */
+            width: 100%; /* Occupy full width */
+            gap: 20px; /* Add space between the sidebar and products */
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        .sidebar{
+            width: 20%;
+            min-width: 200px; 
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            background: transparent;
+            text-align: center;
+            display: grid;
+            padding:20px;
+            backdrop-filter: blur(10px);
+        }
+        .sidebar ul{
+            margin-top: 20px;
         }
         h1 {
             margin-bottom: 20px;
@@ -51,10 +71,13 @@ if (isset($_SESSION['cart'])) {
             display: flex;
             flex-wrap: wrap;
             /*lex-direction: column;*/
+            margin-left: 20%;
+            width: 80%;
             gap: 16px;
             z-index:2;
-            justify-content: center;
+            justify-content: flex-start;
             padding: 20px;
+
         }
 
     
@@ -85,10 +108,10 @@ if (isset($_SESSION['cart'])) {
 
         .price {
             font-size: 1.2em;
-            color: #555;
+            color: black;
             margin: 8px 0;
         }
-
+        
         .product-card .button {
             background-color:#33b249 ;
             color: white;
@@ -111,8 +134,8 @@ if (isset($_SESSION['cart'])) {
         
         .search {
             width: 100%;
+            padding-top: 30%;
             position: relative;
-            display: flex;
             text-align: center;
         }
 
@@ -217,94 +240,97 @@ if (isset($_SESSION['cart'])) {
             </div>
         </ul>
     </nav>
-    
 </head>
 <body >
     
-    
-   
-    
     <div class="body1">
-            <!-- Add the Search Form above the product table -->
-        
-            <div class="search">
-                <form method="GET" action="product.php">
-                    <input type="text" class ="searchTerm" name="search_query" placeholder="What are you looking for?">
-                    <button type="submit" class="searchButton"> <img class="search-icon" src="icon-image/search.png" alt="🔍"></i></button>
-                </form>
-            </div>
-        
-            
-        
-
-        <!-- Product Table -->
-        <div class="product-container">
-    <Table id="itemstable" class="display">
-        <?php
-        // Check if a search query is provided
-        $searchQuery = isset($_GET['search_query']) ? $_GET['search_query'] : '';
-
-        // Database connection (replace with your actual database credentials)
-        $servername = "localhost";
-        $sql = "SELECT id, name, description, price, image, quantity FROM products";
-
-        $result = $conn->query($sql);
-
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
-        // SQL query to search products based on the search term or show all products if no search term is entered
-        if ($searchQuery) {
-            $sql = "SELECT id, name, description, price, image, quantity FROM products WHERE name LIKE ? OR description LIKE ?";
-            $stmt = $conn->prepare($sql);
-            $searchTerm = "%" . $searchQuery . "%";
-            $stmt->bind_param("ss", $searchTerm, $searchTerm);
-            $stmt->execute();
-            $result = $stmt->get_result();
-        } else {
-            // If no search term is entered, show all products
-            $sql = "SELECT id, name, description, price, image, quantity FROM products";
-            $result = $conn->query($sql);
-        }
-
-        if ($result && $result->num_rows > 0):
-            while ($row = $result->fetch_assoc()):
-        ?>
-        <div class="product-card">
-            <!-- Display product quantity at the top -->
-            
-            <img class="product-image" src="Product-images/<?php echo htmlspecialchars($row['image']); ?>" alt="Product-images/<?php echo htmlspecialchars($row['image']); ?>"> 
-            <div class="product-info">    
-                <h2><?php echo htmlspecialchars($row['name']); ?></h2>
-                <div class="product-quantity">
-                    <p>Available Quantity: <?php echo (int)$row['quantity']; ?></p>
-                </div>
-                <p><?php echo htmlspecialchars($row['description']); ?></p>
-                <div class="price"><?php echo number_format($row['price'], 2); ?></div>
-                
-                <form action="add_to_cart.php" method="post">
-                    <input type="hidden" name="product_id" value="<?php echo (int)$row['id']; ?>">
-                    <input type="number" name="quantity" value="1" min="1" max="<?php echo (int)$row['quantity']; ?>" 
-                           <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
-                    <input class="button" type="submit" value="Add to Cart" 
-                           <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
-                </form>
-            </div>
+    <div class="sidebar">
+        <!-- Add the Search Form above the product table -->
+        <div class="search">
+            <form method="GET" action="product.php">
+                <input type="text" class ="searchTerm" name="search_query" placeholder="What are you looking for?">
+                <button type="submit" class="searchButton"> <img class="search-icon" src="icon-image/search.png" alt="🔍"></i></button>
+            </form>
         </div>
-        <?php 
-            endwhile;
-        else: 
-        ?>
-            <p>No products found.</p>
-        <?php 
-        endif;
+        
+        <ul>
+            <li>Sort Function goes Here</li>
+            <li>Show all item</li>
+            <li>Show only available items</li>
+        </ul>
+        
 
-        if ($searchQuery) $stmt->close();
-        ?>
-    </Table>
-</div>
+        <!-- Sort function goes here -->
+    </div>
+    
+        <!-- Product Table -->
+    <div class="product-container">
+        <Table id="itemstable" class="products">
+            <?php
+            // Check if a search query is provided
+            $searchQuery = isset($_GET['search_query']) ? $_GET['search_query'] : '';
 
+            // Database connection (replace with your actual database credentials)
+            $servername = "localhost";
+            $sql = "SELECT id, name, description, price, image, quantity FROM products";
+
+            $result = $conn->query($sql);
+
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            // SQL query to search products based on the search term or show all products if no search term is entered
+            if ($searchQuery) {
+                $sql = "SELECT id, name, description, price, image, quantity FROM products WHERE name LIKE ? OR description LIKE ?";
+                $stmt = $conn->prepare($sql);
+                $searchTerm = "%" . $searchQuery . "%";
+                $stmt->bind_param("ss", $searchTerm, $searchTerm);
+                $stmt->execute();
+                $result = $stmt->get_result();
+            } else {
+                // If no search term is entered, show all products
+                $sql = "SELECT id, name, description, price, image, quantity FROM products";
+                $result = $conn->query($sql);
+            }
+
+            if ($result && $result->num_rows > 0):
+                while ($row = $result->fetch_assoc()):
+            ?>
+            <div class="product-card">
+                <!-- Display product quantity at the top -->
+                
+                <img class="product-image" src="Product-images/<?php echo htmlspecialchars($row['image']); ?>" alt="Product-images/<?php echo htmlspecialchars($row['image']); ?>"> 
+                <div class="product-info">    
+                    <h2><?php echo htmlspecialchars($row['name']); ?></h2>
+                    <div class="product-quantity">
+                        <p>Available Quantity: <?php echo (int)$row['quantity']; ?></p>
+                    </div>
+                    <p><?php echo htmlspecialchars($row['description']); ?></p>
+                    <div class="price"><?php echo number_format($row['price'], 2); ?> $</div>
+                    
+                    <form action="add_to_cart.php" method="post">
+                        <input type="hidden" name="product_id" value="<?php echo (int)$row['id']; ?>">
+                        <input type="number" name="quantity" value="1" min="1" max="<?php echo (int)$row['quantity']; ?>" 
+                            <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
+                        <input class="button" type="submit" value="Add to Cart" 
+                            <?php echo $row['quantity'] > 0 ? '' : 'disabled'; ?>>
+                    </form>
+                </div>
+            </div>
+            <?php 
+                endwhile;
+            else: 
+            ?>
+                <p>No products found.</p>
+            <?php 
+            endif;
+
+            if ($searchQuery) $stmt->close();
+            ?>
+        </Table>
+    </div>
+    </div>
     <!-- Close the database connection -->
     <?php $conn->close(); ?>
     <script src="JavaScript/cart.js"></script>

@@ -26,7 +26,7 @@ if (isset($_SESSION['cart'])) {
             background-repeat:no-repeat ;
             background-size: cover;
             background-attachment: fixed;
-            background-image: url('background/user-background1.jpg');
+            background-image: url('background/user-background2.jpg');
         }
         <?php include 'CSS/styles.css'; ?>
 
@@ -34,7 +34,6 @@ if (isset($_SESSION['cart'])) {
 
     <!-- Navigation Bar -->
     <nav class="navbar">
-        
         <ul>
             <!-- Logo on the left -->
             <li class="logo">

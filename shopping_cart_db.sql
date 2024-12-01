@@ -144,6 +144,7 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) 
 
 CREATE TABLE `products` (
   `id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
@@ -155,17 +156,27 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `description`, `price`, `image`, `created_at`) VALUES
-(1, 'Product 1', 'This is a description for Product 1. A fantastic item to have!', 9.99, 'pic1.jpg', '2024-09-10 19:37:24'),
-(2, 'Product 2', 'This is a description for Product 2. Popular among customers.', 19.99, 'image2.jpg', '2024-09-10 19:37:24'),
-(3, 'Product 3', 'This is a description for Product 3. It offers great value for its price.', 29.99, 'image3.jpg', '2024-09-10 19:37:24'),
-(4, 'Product 4', 'This is a description for Product 4. A must-have for any household.', 15.99, 'image4.jpg', '2024-09-10 19:37:24'),
-(5, 'Product 5', 'This is a description for Product 5. A premium item with excellent reviews.', 49.99, 'image5.jpg', '2024-09-10 19:37:24'),
-(6, 'Product 6', 'This is a description for Product 6. Known for its durability and quality.', 24.99, 'image6.jpg', '2024-09-10 19:37:24'),
-(7, 'Product 7', 'This is a description for Product 7. A budget-friendly choice for all.', 12.49, 'image7.jpg', '2024-09-10 19:37:24'),
-(8, 'Product 8', 'This is a description for Product 8. Compact, lightweight, and versatile.', 22.75, 'image8.jpg', '2024-09-10 19:37:24'),
-(9, 'Product 9', 'This is a description for Product 9. Top-rated in its category.', 34.95, 'image9.jpg', '2024-09-10 19:37:24'),
-(10, 'Product 10', 'This is a description for Product 10. Designed for efficiency and style.', 59.99, 'image10.jpg', '2024-09-10 19:37:24');
+INSERT INTO `products` (`id`, `quantity`, `name`, `description`, `price`, `image`, `created_at`) VALUES
+(1, 25, 'Yoga Mat', 'High-quality yoga mat with non-slip surface for excellent grip.', 29.99, 'yoga_mat.jpg', '2024-09-10 19:37:24'),
+(2, 15, 'Dumbbell Set', 'Adjustable dumbbell set, perfect for strength training at home.', 59.99, 'dumbbell_set.jpg', '2024-09-10 19:37:24'),
+(3, 40, 'Resistance Bands', 'Set of resistance bands with varying levels of tension.', 19.99, 'resistance_bands.jpg', '2024-09-10 19:37:24'),
+(4, 30, 'Kettlebell', 'Premium kettlebell with a comfortable handle for effective workouts.', 34.99, 'kettlebell.jpg', '2024-09-10 19:37:24'),
+(5, 20, 'Foam Roller', 'Durable foam roller for muscle recovery and deep tissue massage.', 24.99, 'foam_roller.jpg', '2024-09-10 19:37:24'),
+(6, 50, 'Pull-Up Bar', 'Adjustable pull-up bar suitable for doorframes and sturdy setups.', 39.99, 'pull_up_bar.jpg', '2024-09-10 19:37:24'),
+(7, 35, 'Treadmill', 'Compact and foldable treadmill for cardio workouts at home.', 399.99, 'treadmill.jpg', '2024-09-10 19:37:24'),
+(8, 10, 'Exercise Ball', 'Anti-burst exercise ball for core strength and balance training.', 14.99, 'exercise_ball.jpg', '2024-09-10 19:37:24'),
+(9, 20, 'Jump Rope', 'Speed jump rope with adjustable length and comfortable grip.', 9.99, 'jump_rope.jpg', '2024-09-10 19:37:24'),
+(10, 12, 'Gym Gloves', 'Breathable and durable gloves for improved grip during workouts.', 12.99, 'gym_gloves.jpg', '2024-09-10 19:37:24'),
+(11, 25, 'Ab Roller', 'Strengthen your core with this easy-to-use ab roller.', 19.99, 'ab_roller.jpg', '2024-09-10 19:37:24'),
+(12, 18, 'Weight Bench', 'Adjustable weight bench for versatile workouts.', 149.99, 'weight_bench.jpg', '2024-09-10 19:37:24'),
+(13, 50, 'Water Bottle', 'Durable and reusable water bottle for staying hydrated.', 9.99, 'water_bottle.jpg', '2024-09-10 19:37:24'),
+(14, 40, 'Ankle Weights', 'Adjustable ankle weights for added resistance.', 24.99, 'ankle_weights.jpg', '2024-09-10 19:37:24'),
+(15, 30, 'Medicine Ball', 'Versatile medicine ball for strength and conditioning exercises.', 34.99, 'medicine_ball.jpg', '2024-09-10 19:37:24'),
+(16, 15, 'Spin Bike', 'Indoor cycling bike with adjustable resistance.', 499.99, 'spin_bike.jpg', '2024-09-10 19:37:24'),
+(17, 20, 'Pull-Up Bands', 'Assist bands for pull-ups and resistance training.', 29.99, 'pull_up_bands.jpg', '2024-09-10 19:37:24'),
+(18, 35, 'Gym Bag', 'Spacious and durable gym bag with multiple compartments.', 39.99, 'gym_bag.jpg', '2024-09-10 19:37:24'),
+(19, 10, 'Workout Timer', 'Compact and easy-to-use workout timer.', 14.99, 'workout_timer.jpg', '2024-09-10 19:37:24'),
+(20, 12, 'Protein Shaker', 'Leak-proof protein shaker for mixing supplements.', 9.99, 'protein_shaker.jpg', '2024-09-10 19:37:24');
 
 -- --------------------------------------------------------
 
