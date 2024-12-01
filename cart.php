@@ -2,6 +2,7 @@
 session_start();
 include 'config.php';  // Include database connection
 
+
 // Check if the user is logged in
 $is_logged_in = isset($_SESSION['user_id']);
 
@@ -20,16 +21,14 @@ function redirectToRemoveItem($product_id, $destination = 'remove_from_cart.php'
         <input type='hidden' name='product_id' value='" . htmlspecialchars($product_id) . "'>
         <button type='submit' style='display: none;'>Submit</button>
       </form>
-      <script>document.getElementById('remove_form').submit();</script>";
+
     exit();
 }
-
-
-
 
 // Initialize cart totals
 $subtotal = 0;
 $tax_rate = 0.0825;  // 8.25% tax rate
+
 
 // Update cart items or remove items
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -60,11 +59,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Call the function to redirect
         redirectToRemoveItem($product_id);
     
+
     }
 }
+
+// Calculate tax and total
+$tax = $subtotal * $tax_rate;
+$total = $subtotal + $tax;
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -73,105 +75,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart</title>
     <style>
+
         <?php include 'CSS/styles.css'; ?>
         <?php include 'CSS/cart.css'; ?>
-
     </style>
-
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        
-        <ul>
-            <!-- Logo on the left -->
-            <li class="logo">
-                <a class="main_page" href="index.php">
-                    <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym</a>
-            </li>
-            <!-- Links on the right -->
-            <li class="toggle-button">
-                <a href="#">
-                    <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
-                </a>
-            </li>
-            <div class="nav-items">
-                <li><a class="NavButton" href="product.php">Browse</a></li>
-                <?php if ($is_logged_in): ?>
-                    <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
-                    <li><a class ="NavUserProfile" href="user-profile.php">My profile</a></li>
-                    <li><a class ="NavLogout" href="logout.php">Logout</a></li>
-                <?php else: ?>
-                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
-                    <li><a class="NavRegister" href="register.php">Register</a></li>
-                <?php endif; ?>
-                <li class="cart">
-                    <a href="cart.php">
-                        <img src="icon-image/cart.png" alt="Cart">
-                        <?php if ($cart_item_count > 0): ?>
-                            <div class="cart-count"><?php echo $cart_item_count; ?></div>
-                        <?php endif; ?>
-                    </a>
-                    <div class="cart-preview" id="cart-preview">
-                    <h3>Cart Preview</h3>
-                    <ul id="cart-items">
-                        <!-- Dynamically generated cart items will go here -->
-                    </ul>
-                    <?php if ($cart_item_count > 0): ?>
-                    <a href="cart.php" class="view-cart">View Cart</a>
-                    <?php else: ?>
-                    <a href="product.php" class="view-cart">Browse our product</a>
-                    <?php endif; ?>
-                    </div>
-                </li>
-                
-            </div>
-        </ul>
-    </nav>
 </head>
 <body>
-    <div class="wrapper">
-        
+    <div class="cart-container">
+        <div class="cart-header">
+            <h1>Your Shopping Cart</h1>
+        </div>
 
-        <?php if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])): ?>
-        <!-- Display empty cart message -->
-        <div class="group1">
-            <div class="motivation-poster">
-                <img src= "background/motivationposter1.jpg">
-            </div>
-            <div class="empty-message">
-                <h2>Your cart is empty</h2>
-                <p>Looks like you haven't added anything yet. Are you going to give up that easily?</p>
-                
-                <a href="product.php">Go back to shopping</a>
-            </div>
-    <?php else: ?>
-        <h1>Your Shopping Cart</h1>
-        <!-- Display cart contents if there are items -->
-        <form action="cart.php" method="POST">
+        <?php if (empty($cart_items)): ?>
+            <p class="empty-cart-message">Your cart is empty. <a href="product.php">Browse Products</a></p>
+        <?php else: ?>
             <table>
                 <thead>
                     <tr>
                         <th>Product</th>
                         <th>Quantity</th>
-                        <th>Price ($)</th>
-                        <th>Total ($)</th>
-                        <th>Action</th>
+                        <th>Price per Unit ($)</th>
+                        <th>Total Price ($)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    foreach ($_SESSION['cart'] as $product_id => $item) {
-                        $sql = "SELECT name, price FROM products WHERE id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("i", $product_id);
-                        $stmt->execute();
-                        $stmt->bind_result($name, $price);
-                        $stmt->fetch();
-                        $stmt->close();
-
-                        $item_total = $price * $item['quantity'];
-                        $subtotal += $item_total;
-                    ?>
+                    <?php foreach ($cart_details as $item): ?>
                         <tr>
+
                             <td><?php echo htmlspecialchars($name); ?></td>
                             
                             <td><?php echo (int)$item['quantity']; ?></td>
@@ -184,8 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <button type="submit" name="remove_item" value="1">Remove</button>
                             </form>
                             </td>
+
                         </tr>
-                    <?php } ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
 <!--
@@ -214,7 +145,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     <?php endif; ?>
 
-    <?php $conn->close(); ?>
-    </div>  
+            <a href="checkout.php" class="checkout-button">Proceed to Checkout</a>
+        <?php endif; ?>
+
+        <a href="index.php" class="back-to-home-button">Back to Home</a>
+    </div>
 </body>
 </html>
