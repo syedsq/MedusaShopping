@@ -2,38 +2,64 @@
 session_start();
 include 'config.php';  // Include database connection
 
-// Ensure the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo "You must be logged in to view your cart.";
+
+// Check if the user is logged in
+$is_logged_in = isset($_SESSION['user_id']);
+
+// Count the total number of items in the cart
+$cart_item_count = 0;
+if (isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $item) {
+        $cart_item_count += $item['quantity'];  // Sum up quantities of all items
+    }
+}
+
+
+function redirectToRemoveItem($product_id, $destination = 'remove_from_cart.php') {
+    // Generate a hidden form and redirect using JavaScript
+    echo "<form action='remove_from_cart.php' method='POST' id='remove_form'>
+        <input type='hidden' name='product_id' value='" . htmlspecialchars($product_id) . "'>
+        <button type='submit' style='display: none;'>Submit</button>
+      </form>
+
     exit();
 }
 
 // Initialize cart totals
 $subtotal = 0;
 $tax_rate = 0.0825;  // 8.25% tax rate
-$cart_items = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];  // Fetch cart items from session
 
-// Fetch cart details and calculate totals
-$cart_details = [];
-if (!empty($cart_items)) {
-    foreach ($cart_items as $product_id => $item) {
-        $sql = "SELECT name, price FROM products WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $product_id);
-        $stmt->execute();
-        $stmt->bind_result($name, $price);
-        $stmt->fetch();
-        $stmt->close();
 
-        $item_total = $price * $item['quantity'];
-        $subtotal += $item_total;
+// Update cart items or remove items
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Update Cart
+    //if (isset($_POST['update_cart'])) {
+        // Ensure 'quantity' is an array before using it in foreach
+       
+            // Loop through each product's quantity in the cart
+            foreach ($_POST['quantity'] as $product_id => $quantity) {
+                $currentQuantity = $_SESSION['cart'][$product_id]['quantity'];
 
-        $cart_details[] = [
-            'name' => $name,
-            'quantity' => $item['quantity'],
-            'price' => $price,
-            'total_price' => $item_total
-        ];
+                // If quantity is set to 0, remove the item
+                if ($quantity == 0) {
+                    redirectToRemoveItem($product_id);
+                } else {
+                    // Update cart using the function
+                    $_SESSION['cart'][$product_id]['quantity'] = $quantity;
+
+                }
+
+            }
+    //}
+
+    // Handle item removal action
+    if (isset($_POST['remove_item'])) {
+        $product_id = $_POST['product_id'];
+    
+        // Call the function to redirect
+        redirectToRemoveItem($product_id);
+    
+
     }
 }
 
@@ -49,95 +75,9 @@ $total = $subtotal + $tax;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-        }
 
-        .cart-container {
-            width: 80%;
-            max-width: 900px;
-            margin: 50px auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .cart-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .cart-header h1 {
-            margin: 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        table th, table td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        table th {
-            background-color: #007bff;
-            color: white;
-        }
-
-        table tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .summary {
-            text-align: right;
-            margin-top: 20px;
-        }
-
-        .summary p {
-            margin: 5px 0;
-            font-size: 16px;
-        }
-
-        .checkout-button, .back-to-home-button {
-            display: block;
-            text-align: center;
-            margin: 20px auto;
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            width: 200px;
-        }
-
-        .checkout-button:hover {
-            background-color: #218838;
-        }
-
-        .back-to-home-button {
-            background-color: #007bff;
-        }
-
-        .back-to-home-button:hover {
-            background-color: #0056b3;
-        }
-
-        .empty-cart-message {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 18px;
-            color: gray;
-        }
+        <?php include 'CSS/styles.css'; ?>
+        <?php include 'CSS/cart.css'; ?>
     </style>
 </head>
 <body>
@@ -161,20 +101,49 @@ $total = $subtotal + $tax;
                 <tbody>
                     <?php foreach ($cart_details as $item): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($item['name']); ?></td>
+
+                            <td><?php echo htmlspecialchars($name); ?></td>
+                            
                             <td><?php echo (int)$item['quantity']; ?></td>
-                            <td><?php echo number_format($item['price'], 2); ?></td>
-                            <td><?php echo number_format($item['total_price'], 2); ?></td>
+                            
+                            <td><?php echo number_format($price, 2); ?></td>
+                            <td><?php echo number_format($item_total, 2); ?></td>
+                            <td>
+                            <form action="remove_from_cart.php" method="POST" style="display: inline;">
+                                <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+                                <button type="submit" name="remove_item" value="1">Remove</button>
+                            </form>
+                            </td>
+
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-
-            <div class="summary">
-                <p>Subtotal: $<?php echo number_format($subtotal, 2); ?></p>
-                <p>Tax (8.25%): $<?php echo number_format($tax, 2); ?></p>
-                <p><strong>Total: $<?php echo number_format($total, 2); ?></strong></p>
+<!--
+            <div style="text-align: center; margin: 20px;">
+                <input type="submit" name="update_cart" value="Update Cart">
             </div>
+                    -->
+        </form>
+
+        <?php
+        $tax_amount = $subtotal * $tax_rate;
+        $total = $subtotal + $tax_amount;
+        ?>
+
+        <div style="text-align: center;">
+            <p>Subtotal: $<?php echo number_format($subtotal, 2); ?></p>
+            <p>Tax (8.25%): $<?php echo number_format($tax_amount, 2); ?></p>
+            <p>Total: $<?php echo number_format($total, 2); ?></p>
+            
+            <?php if ($is_logged_in): ?>
+                <a href="checkout.php" class="checkout-button">Proceed to Checkout</a>
+            <?php else: ?>
+                <a href="login.php" class="checkout-button">Log in to complete your purchase</a>
+            <?php endif; ?>
+                <a href="index.php" class="back-button">Back to Home</a>
+        </div>
+    <?php endif; ?>
 
             <a href="checkout.php" class="checkout-button">Proceed to Checkout</a>
         <?php endif; ?>
