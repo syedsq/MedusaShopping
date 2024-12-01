@@ -34,7 +34,6 @@ if (isset($_SESSION['cart'])) {
 
     <!-- Navigation Bar -->
     <nav class="navbar">
-        
         <ul>
             <!-- Logo on the left -->
             <li class="logo">

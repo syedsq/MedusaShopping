@@ -31,7 +31,7 @@ if (isset($_SESSION['cart'])) {
             background-repeat:no-repeat ;
             background-size: cover;
             background-attachment: fixed;
-            background-image: url('background/gymbackground.jpeg');
+            background-image: url('background/background4.jpeg');
             display: flex;
 
         }
@@ -44,15 +44,20 @@ if (isset($_SESSION['cart'])) {
         }
         .sidebar{
             width: 20%;
-            min-width: 300px; 
+            min-width: 200px; 
             position: fixed;
             top: 0px;
-            left: 20px;
+            left: 0px;
             bottom: 0px;
             background: transparent;
-            
+            text-align: center;
+            display: grid;
+            padding:20px;
+            backdrop-filter: blur(10px);
         }
-        
+        .sidebar ul{
+            margin-top: 20px;
+        }
         h1 {
             margin-bottom: 20px;
         }
@@ -66,12 +71,13 @@ if (isset($_SESSION['cart'])) {
             display: flex;
             flex-wrap: wrap;
             /*lex-direction: column;*/
-            margin-left: 10%;
-            width: 100%;
+            margin-left: 20%;
+            width: 80%;
             gap: 16px;
             z-index:2;
             justify-content: flex-start;
             padding: 20px;
+
         }
 
     
@@ -102,7 +108,7 @@ if (isset($_SESSION['cart'])) {
 
         .price {
             font-size: 1.2em;
-            color: #555;
+            color: black;
             margin: 8px 0;
         }
         
@@ -128,9 +134,8 @@ if (isset($_SESSION['cart'])) {
         
         .search {
             width: 100%;
-            top:20%;
+            padding-top: 30%;
             position: relative;
-            display: flex;
             text-align: center;
         }
 
@@ -247,8 +252,13 @@ if (isset($_SESSION['cart'])) {
                 <button type="submit" class="searchButton"> <img class="search-icon" src="icon-image/search.png" alt="🔍"></i></button>
             </form>
         </div>
-            
-
+        
+        <ul>
+            <li>Sort Function goes Here</li>
+            <li>Show all item</li>
+            <li>Show only available items</li>
+        </ul>
+        
 
         <!-- Sort function goes here -->
     </div>
