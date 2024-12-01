@@ -24,11 +24,7 @@ function redirectToRemoveItem($product_id, $destination = 'remove_from_cart.php'
 }
 
 
-// Check if cart is empty
-if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
-    echo "<p>Your cart is empty. <a href='index.php'>Go back to shopping</a></p>";
-    exit();
-}
+
 
 // Initialize cart totals
 $subtotal = 0;
@@ -69,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,151 +74,140 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        table {
-            width: 80%;
-            max-width: 1000px;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        table th, table td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        table th {
-            background-color: #007bff;
-            color: white;
-        }
-
-        table tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        input[type="number"] {
-            width: 50px;
-            padding: 5px;
-        }
-
-        input[type="submit"], .checkout-button, .back-button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: inline-block;
-            text-decoration: none;
-        }
-
-        input[type="submit"]:hover, .checkout-button:hover, .back-button:hover {
-            background-color: #218838;
-        }
-
-        .checkout-button, .back-button {
-            display: block;
-            text-align: center;
-            margin: 20px auto;
-            width: 200px;
-        }
-
-        .back-button {
-            background-color: #007bff;
-        }
-
-        .back-button:hover {
-            background-color: #0056b3;
-        }
+        <?php include 'CSS/styles.css'; ?>
+        <?php include 'CSS/cart.css'; ?>
+        
         
             
 
     </style>
 
     <!-- Navigation Bar -->
-    
+    <nav class="navbar">
+        
+        <ul>
+            <!-- Logo on the left -->
+            <li class="logo">
+                <a class="main_page" href="index.php">
+                    <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym</a>
+            </li>
+            <!-- Links on the right -->
+            <li class="toggle-button">
+                <a href="#">
+                    <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
+                </a>
+            </li>
+            <div class="nav-items">
+                <li><a class="NavButton" href="product.php">Browse</a></li>
+                <?php if ($is_logged_in): ?>
+                    <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
+                    <li><a class ="NavUserProfile" href="user-profile.php">My profile</a></li>
+                    <li><a class ="NavLogout" href="logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
+                    <li><a class="NavRegister" href="register.php">Register</a></li>
+                <?php endif; ?>
+                <li class="cart">
+                    <a href="cart.php">
+                        <img src="icon-image/cart.png" alt="Cart">
+                        <?php if ($cart_item_count > 0): ?>
+                            <div class="cart-count"><?php echo $cart_item_count; ?></div>
+                        <?php endif; ?>
+                    </a>
+                    <div class="cart-preview" id="cart-preview">
+                    <h3>Cart Preview</h3>
+                    <ul id="cart-items">
+                        <!-- Dynamically generated cart items will go here -->
+                    </ul>
+                    <?php if ($cart_item_count > 0): ?>
+                    <a href="cart.php" class="view-cart">View Cart</a>
+                    <?php else: ?>
+                    <a href="product.php" class="view-cart">Browse our product</a>
+                    <?php endif; ?>
+                    </div>
+                </li>
+                
+            </div>
+        </ul>
+    </nav>
 </head>
 <body>
-    <h1>Your Shopping Cart</h1>
+    <div class="wrapper">
+        <h1>Your Shopping Cart</h1>
 
-    <form action="cart.php" method="POST">
-        <table>
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price ($)</th>
-                    <th>Total ($)</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // Fetch product details from the session cart
-                foreach ($_SESSION['cart'] as $product_id => $item) {
-                    $sql = "SELECT name, price FROM products WHERE id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $product_id);
-                    $stmt->execute();
-                    $stmt->bind_result($name, $price);
-                    $stmt->fetch();
-                    $stmt->close();
-
-                    // Calculate the total for each item
-                    $item_total = $price * $item['quantity'];
-                    $subtotal += $item_total;
-                ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($name); ?></td>
-                        <td>
-                            <input type="number" name="quantity[<?php echo $product_id; ?>]" value="<?php echo $item['quantity']; ?>" min="0">
-                        </td>
-                        <td><?php echo number_format($price, 2); ?></td>
-                        <td><?php echo number_format($item_total, 2); ?></td>
-                        <td>
-                            <button type="submit" name="remove_item" value="1">Remove</button>
-                            <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-
-        <div style="text-align: center; margin: 20px;">
-            <input type="submit" name="update_cart" value="Update Cart">
+        <?php if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])): ?>
+        <!-- Display empty cart message -->
+        <div class="empty-message">
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added anything yet.</p>
+            <a href="index.php">Go back to shopping</a>
         </div>
-    </form>
+    <?php else: ?>
+        <!-- Display cart contents if there are items -->
+        <form action="cart.php" method="POST">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price ($)</th>
+                        <th>Total ($)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($_SESSION['cart'] as $product_id => $item) {
+                        $sql = "SELECT name, price FROM products WHERE id = ?";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("i", $product_id);
+                        $stmt->execute();
+                        $stmt->bind_result($name, $price);
+                        $stmt->fetch();
+                        $stmt->close();
 
-    <?php
-    // Calculate tax and total
-    $tax_amount = $subtotal * $tax_rate;
-    $total = $subtotal + $tax_amount;
-    ?>
+                        $item_total = $price * $item['quantity'];
+                        $subtotal += $item_total;
+                    ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($name); ?></td>
+                            <td>
+                                <input type="number" name="quantity[<?php echo $product_id; ?>]" value="<?php echo $item['quantity']; ?>" min="0">
+                            </td>
+                            <td><?php echo number_format($price, 2); ?></td>
+                            <td><?php echo number_format($item_total, 2); ?></td>
+                            <td>
+                            <form action="cart.php" method="POST" style="display: inline;">
+                                <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+                                <button type="submit" name="remove_item" value="1">Remove</button>
+                            </form>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
 
-    <div style="text-align: center;">
-        <p>Subtotal: $<?php echo number_format($subtotal, 2); ?></p>
-        <p>Tax (8.25%): $<?php echo number_format($tax_amount, 2); ?></p>
-        <p>Total: $<?php echo number_format($total, 2); ?></p>
+            <div style="text-align: center; margin: 20px;">
+                <input type="submit" name="update_cart" value="Update Cart">
+            </div>
+        </form>
 
-        <a href="checkout.php" class="checkout-button">Proceed to Checkout</a>
-        <a href="index.php" class="back-button">Back to Home</a>
-    </div>
+        <?php
+        $tax_amount = $subtotal * $tax_rate;
+        $total = $subtotal + $tax_amount;
+        ?>
+
+        <div style="text-align: center;">
+            <p>Subtotal: $<?php echo number_format($subtotal, 2); ?></p>
+            <p>Tax (8.25%): $<?php echo number_format($tax_amount, 2); ?></p>
+            <p>Total: $<?php echo number_format($total, 2); ?></p>
+
+            <a href="checkout.php" class="checkout-button">Proceed to Checkout</a>
+            <a href="index.php" class="back-button">Back to Home</a>
+        </div>
+    <?php endif; ?>
 
     <?php $conn->close(); ?>
+    </div>
 </body>
 </html>

@@ -21,10 +21,7 @@ if (isset($_POST['product_id'])) {
 
         // Refund the stock to the database
         if ($current_quantity !== null) {
-            echo "current quantity", $current_quantity;
-            echo "cart quantity", $cart_quantity;
             $new_quantity = $current_quantity + $cart_quantity;
-            echo "new", $new_quantity;
             // Update the product's quantity in the database
             $update_query = "UPDATE products SET quantity = ? WHERE id = ?";
             $update_stmt = $conn->prepare($update_query);
