@@ -11,6 +11,33 @@ body {
     display: flexbox;
     justify-content: center;
 }
+.empty-message {
+    height: 300px;
+    color: rgb(241, 180, 67);
+    margin: 10px 0;
+    font-size: 14px;
+    background-color: #fff6e6;
+    padding: 10px;
+    border: 1px solid rgb(255, 166, 0);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.empty-message a{
+    color: rgb(241, 180, 67);
+    margin-bottom: 10px;
+    font-size: 14px;
+    background-color: #fff6e6;
+    padding: 10px;
+    border: 1px solid rgb(255, 166, 0);
+    border-radius: 5px;
+    text-decoration: none;
+}
+.empty-message a:hover{
+    
+    background-color: #fcc245;
+    color: beige;
+}
 h1 {
     text-align: center;
     margin: 20px 0;
