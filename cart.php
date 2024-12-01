@@ -207,13 +207,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p>Subtotal: $<?php echo number_format($subtotal, 2); ?></p>
             <p>Tax (8.25%): $<?php echo number_format($tax_amount, 2); ?></p>
             <p>Total: $<?php echo number_format($total, 2); ?></p>
-
-            <a href="checkout.php" class="checkout-button">Proceed to Checkout</a>
-            <a href="index.php" class="back-button">Back to Home</a>
+            
+            <?php if ($is_logged_in): ?>
+                <a href="checkout.php" class="checkout-button">Proceed to Checkout</a>
+            <?php else: ?>
+                <a href="login.php" class="checkout-button">Log in to complete your purchase</a>
+            <?php endif; ?>
+                <a href="index.php" class="back-button">Back to Home</a>
         </div>
     <?php endif; ?>
 
     <?php $conn->close(); ?>
-    </div>
+    </div>  
 </body>
 </html>
