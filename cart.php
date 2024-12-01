@@ -16,11 +16,11 @@ if (isset($_SESSION['cart'])) {
 
 function redirectToRemoveItem($product_id, $destination = 'remove_from_cart.php') {
     // Generate a hidden form and redirect using JavaScript
-    $remove "<form id='redirect_form' action='" . htmlspecialchars($destination) . "' method='POST' style='display: none;'>
-            <input type='hidden' name='product_id' value='" . htmlspecialchars($product_id) . "'>
-          </form>
-          <script>document.getElementById('redirect_form').submit();</script>";
-    echo $remove;
+    echo "<form action='remove_from_cart.php' method='POST' id='remove_form'>
+        <input type='hidden' name='product_id' value='" . htmlspecialchars($product_id) . "'>
+        <button type='submit' style='display: none;'>Submit</button>
+      </form>
+      <script>document.getElementById('remove_form').submit();</script>";
     exit();
 }
 
@@ -39,8 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
        
             // Loop through each product's quantity in the cart
             foreach ($_POST['quantity'] as $product_id => $quantity) {
-                
-
                 $currentQuantity = $_SESSION['cart'][$product_id]['quantity'];
 
                 // If quantity is set to 0, remove the item
@@ -77,9 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <style>
         <?php include 'CSS/styles.css'; ?>
         <?php include 'CSS/cart.css'; ?>
-        
-        
-            
 
     </style>
 
@@ -184,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <td><?php echo number_format($price, 2); ?></td>
                             <td><?php echo number_format($item_total, 2); ?></td>
                             <td>
-                            <form action="cart.php" method="POST" style="display: inline;">
+                            <form action="remove_from_cart.php" method="POST" style="display: inline;">
                                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
                                 <button type="submit" name="remove_item" value="1">Remove</button>
                             </form>

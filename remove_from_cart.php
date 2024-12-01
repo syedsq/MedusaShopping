@@ -32,10 +32,31 @@ if (isset($_POST['product_id'])) {
 
         // Remove the item from the session
         unset($_SESSION['cart'][$product_id]);
-
         // Redirect back to the cart page
-        header("Location: cart.php");
-        exit();
+        
     }
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Removing Item...</title>
+    <style>
+        <?php include 'CSS/cart.css'; ?>
+    </style>
+</head>
+<body>
+    <div class="message">
+        <p>Removing item from your cart...</p>
+    </div>
+
+    <!-- Redirect to the cart page after a 0.5-second delay -->
+    <script>
+        setTimeout(function () {
+            window.location.href = "cart.php";
+        }, 200); // Delay in milliseconds
+    </script>
+</body>
+</html>
