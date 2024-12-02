@@ -34,6 +34,7 @@ if (isset($_SESSION['cart'])) {
             background-attachment: fixed;
         }
         <?php include 'CSS/styles.css'; ?>
+        <?php include 'CSS/product.css'; ?>
         
     </style>
 

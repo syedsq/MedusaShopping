@@ -66,6 +66,44 @@ $result = $conn->query($sql);
             background-image: url('background/background4.jpeg');
             display: flex;
         }
+        
+
+        @media (max-width: 500px) {
+            .body1 {
+                flex-direction: column; /* Stack elements vertically */
+                
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                margin-bottom: 20px;
+                transform: none;
+                box-shadow: none;
+                padding: 10px;
+                border-radius: 10px 10px 0 0;
+                background-color: #b2c6d3;
+                border: 1px solid #75b2c5;
+            }
+
+            .product-container {
+                width: 100%;
+                margin-left: 0; /* Remove left margin for mobile */
+                gap: 16px;
+                padding: 0 10px;
+            }
+
+            .product-card {
+                width: 100%;
+            }
+        }
+
+
+
+/* Show toggle button in mobile view */
+
+
     </style>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -76,25 +114,27 @@ $result = $conn->query($sql);
     </script>
 
     <!-- Navigation Bar -->
-    <nav class="navbar">
+    <nav class="navbar">  
         <ul>
+            <!-- Logo on the left -->
             <li class="logo">
                 <a class="main_page" href="index.php">
                     <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym</a>
             </li>
+            <!-- Links on the right -->
             <li class="toggle-button">
                 <a href="#">
-                    <img class="image" src="icon-image/toggle-icon.png" alt="toggle" style="vertical-align: middle">
+                    <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
                 </a>
             </li>
             <div class="nav-items">
                 <li><a class="NavButton" href="product.php">Browse</a></li>
                 <?php if ($is_logged_in): ?>
                     <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
-                    <li><a class="NavUserProfile" href="user-profile.php">My profile</a></li>
-                    <li><a class="NavLogout" href="logout.php">Logout</a></li>
+                    <li><a class ="NavUserProfile" href="user-profile.php">My profile</a></li>
+                    <li><a class ="NavLogout" href="logout.php">Logout</a></li>
                 <?php else: ?>
-                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style="vertical-align: middle">Login</a></li>
+                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
                     <li><a class="NavRegister" href="register.php">Register</a></li>
                 <?php endif; ?>
                 <li class="cart">
@@ -107,6 +147,7 @@ $result = $conn->query($sql);
                     <div class="cart-preview" id="cart-preview">
                     <h3>Cart Preview</h3>
                     <ul id="cart-items">
+                        <!-- Dynamically generated cart items will go here -->
                     </ul>
                     <?php if ($cart_item_count > 0): ?>
                     <a href="cart.php" class="view-cart">View Cart</a>
@@ -115,13 +156,16 @@ $result = $conn->query($sql);
                     <?php endif; ?>
                     </div>
                 </li>
+                
             </div>
         </ul>
     </nav>
 </head>
 <body>
     <div class="body1">
+        
         <div class="sidebar">
+            
             <div class="search">
                 <form method="GET" action="product.php">
                     <input type="text" class="searchTerm" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>" placeholder="What are you looking for?">
@@ -129,8 +173,7 @@ $result = $conn->query($sql);
                         <img class="search-icon" src="icon-image/search.png" alt="🔍">
                     </button>
                 </form>
-            </div>
-
+            </div>     
             <form method="GET" action="product.php">
                 <input type="hidden" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>">
                 <div class="filter-group">
