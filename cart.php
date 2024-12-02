@@ -75,7 +75,126 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <style>
         <?php include 'CSS/styles.css'; ?>
         <?php include 'CSS/cart.css'; ?>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            
+        }
 
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+            border-radius:2px
+
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            background-color: #ff4f58;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #d43f48;
+        }
+
+        /* Empty Cart Styles */
+
+        /* Button styling for checkout */
+        .checkout-button, .back-button {
+            padding: 10px 20px;
+            background-color: #3c8dbc;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .checkout-button:hover, .back-button:hover {
+            background-color: #2b7aa1;
+        }
+
+        /* Responsive Cart Design */
+        @media (max-width: 500px) {
+            h2 {
+                padding-top: 100px;
+            }
+            table {
+                width: 100%;
+                font-size: 14px;
+            }
+            .minimize{
+                display:none;
+            }
+            th, td {
+                padding: 10px;
+            }
+
+            .group1 {
+                padding: 10px;
+            }
+        }
+        .checkout-calculation {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+        .checkout-calculation p {
+            font-size: 1.1em;
+            margin: 10px 0;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .checkout-calculation p span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .checkout-calculation p:last-child {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #00b4cc; 
+        }
+
+        .checkout-calculation .totals {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .checkout-calculation .totals p {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        /* Add hover effect on checkout-calculation box */
+        .checkout-calculation:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
     </style>
 
     <!-- Navigation Bar -->
@@ -152,7 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <tr>
                         <th>Product</th>
                         <th>Quantity</th>
-                        <th>Price ($)</th>
+                        <th class="minimize" >Price ($)</th>
                         <th>Total ($)</th>
                         <th>Action</th>
                     </tr>
@@ -176,12 +295,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             
                             <td><?php echo (int)$item['quantity']; ?></td>
                             
-                            <td><?php echo number_format($price, 2); ?></td>
+                            <td class="minimize"><?php echo number_format($price, 2); ?></td>
                             <td><?php echo number_format($item_total, 2); ?></td>
                             <td>
                             <form action="remove_from_cart.php" method="POST" style="display: inline;">
                                 <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
-                                <button type="submit" name="remove_item" value="1">Remove</button>
+                                <button type="submit" name="remove_item" value="1">✖</button>
                             </form>
                             </td>
                         </tr>
@@ -201,10 +320,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ?>
 
         <div style="text-align: center;">
-            <p>Subtotal: $<?php echo number_format($subtotal, 2); ?></p>
-            <p>Tax (8.25%): $<?php echo number_format($tax_amount, 2); ?></p>
-            <p>Total: $<?php echo number_format($total, 2); ?></p>
-            
+
+            <div class="checkout-calculation">
+                <p>Subtotal: $<?php echo number_format($subtotal, 2); ?></p>
+                <p>Tax (8.25%): $<?php echo number_format($tax_amount, 2); ?></p>
+                <p>Total: $<?php echo number_format($total, 2); ?></p>
+            </div>
             <?php if ($is_logged_in): ?>
                 <a href="checkout.php" class="checkout-button">Proceed to Checkout</a>
             <?php else: ?>
@@ -216,5 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <?php $conn->close(); ?>
     </div>  
+    <script src="JavaScript/cart.js"></script>
+    <script src="JavaScript/toggle.js"></script>   
 </body>
 </html>

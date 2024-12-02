@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             align-items: center;}   
     </style>
     <!-- Navigation Bar -->
-    <nav class="navbar">
+    <nav class="navbar">  
         <ul>
             <!-- Logo on the left -->
             <li class="logo">
@@ -101,11 +101,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym</a>
             </li>
             <!-- Links on the right -->
+            <li class="toggle-button">
+                <a href="#">
+                    <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
+                </a>
+            </li>
             <div class="nav-items">
                 <li><a class="NavButton" href="product.php">Browse</a></li>
                 <?php if ($is_logged_in): ?>
                     <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
-                    <li><a href="logout.php">Logout</a></li>
+                    <li><a class ="NavUserProfile" href="user-profile.php">My profile</a></li>
+                    <li><a class ="NavLogout" href="logout.php">Logout</a></li>
                 <?php else: ?>
                     <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
                     <li><a class="NavRegister" href="register.php">Register</a></li>
@@ -188,6 +194,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             });
         });
     </script>
-    </script>
+    <script src="JavaScript/toggle.js"></script>  
 </body>
 </html>

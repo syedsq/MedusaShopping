@@ -98,7 +98,7 @@ $result = $conn->query($sql);
                 width: 100%;
             }
         }
-
+        
 
 
 /* Show toggle button in mobile view */
