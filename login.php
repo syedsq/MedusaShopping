@@ -136,6 +136,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php endif; ?>
     </div>
 </body>
-
+<script src="JavaScript/toggle.js"></script>
 <script src="JavaScript/cart.js"></script>
 </html>

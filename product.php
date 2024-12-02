@@ -181,5 +181,7 @@ $result = $conn->query($sql);
     </div>
     <!-- Close the database connection -->
     <?php $conn->close(); ?>
+    <script src="JavaScript/cart.js"></script>
+    <script src="JavaScript/toggle.js"></script>
 </body>
 </html>
