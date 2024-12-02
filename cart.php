@@ -289,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         $item_total = $price * $item['quantity'];
                         $subtotal += $item_total;
-                        $image_path = "Product-images/" . strtolower(str_replace(' ', '_', $name)) . ".jpg";
+                        $image_path = "Product-images/" . strtolower(str_replace([' ', '-'], '_', $name)) . ".jpg";
                     ?>
                         <tr>
                         <td>
