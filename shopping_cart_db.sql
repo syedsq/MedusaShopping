@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 16, 2024 at 05:34 PM
+-- Generation Time: Dec 02, 2024 at 03:16 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -73,28 +73,60 @@ CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `shipping_address` text DEFAULT NULL,
+  `shipping_city` varchar(255) DEFAULT NULL,
+  `shipping_state` varchar(255) DEFAULT NULL,
+  `shipping_zip` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `created_at`) VALUES
-(1, 1, 10.81, '2024-09-10 22:09:47'),
-(2, 1, 32.44, '2024-09-10 22:14:26'),
-(3, 1, 259.76, '2024-09-10 22:19:44'),
-(4, 1, 194.82, '2024-09-10 22:37:08'),
-(5, 1, 17.31, '2024-09-10 22:42:55'),
-(6, 1, 13.52, '2024-09-10 22:48:49'),
-(7, 1, 13.52, '2024-09-10 22:49:11'),
-(8, 1, 329.96, '2024-09-10 23:47:04'),
-(9, 1, 286.81, '2024-09-11 00:01:46'),
-(10, 1, 411.24, '2024-09-11 00:48:26'),
-(11, 1, 222.94, '2024-09-11 13:54:06'),
-(12, 1, 281.39, '2024-09-11 14:05:02'),
-(13, 1, 281.40, '2024-09-11 19:42:10'),
-(14, 1, 324.70, '2024-09-16 14:32:23');
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `created_at`, `shipping_address`, `shipping_city`, `shipping_state`, `shipping_zip`) VALUES
+(1, 1, 10.81, '2024-09-10 22:09:47', NULL, NULL, NULL, NULL),
+(2, 1, 32.44, '2024-09-10 22:14:26', NULL, NULL, NULL, NULL),
+(3, 1, 259.76, '2024-09-10 22:19:44', NULL, NULL, NULL, NULL),
+(4, 1, 194.82, '2024-09-10 22:37:08', NULL, NULL, NULL, NULL),
+(5, 1, 17.31, '2024-09-10 22:42:55', NULL, NULL, NULL, NULL),
+(6, 1, 13.52, '2024-09-10 22:48:49', NULL, NULL, NULL, NULL),
+(7, 1, 13.52, '2024-09-10 22:49:11', NULL, NULL, NULL, NULL),
+(8, 1, 329.96, '2024-09-10 23:47:04', NULL, NULL, NULL, NULL),
+(9, 1, 286.81, '2024-09-11 00:01:46', NULL, NULL, NULL, NULL),
+(10, 1, 411.24, '2024-09-11 00:48:26', NULL, NULL, NULL, NULL),
+(11, 1, 222.94, '2024-09-11 13:54:06', NULL, NULL, NULL, NULL),
+(12, 1, 281.39, '2024-09-11 14:05:02', NULL, NULL, NULL, NULL),
+(13, 1, 281.40, '2024-09-11 19:42:10', NULL, NULL, NULL, NULL),
+(14, 1, 324.70, '2024-09-16 14:32:23', NULL, NULL, NULL, NULL),
+(15, 2, 10.81, '2024-11-25 23:27:03', NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_details`
+--
+
+CREATE TABLE `order_details` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `state` varchar(50) NOT NULL,
+  `zip` varchar(20) NOT NULL,
+  `credit_card_number` varchar(20) NOT NULL,
+  `expiration_date` varchar(5) NOT NULL,
+  `ccv` varchar(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_details`
+--
+
+INSERT INTO `order_details` (`id`, `order_id`, `first_name`, `last_name`, `address`, `city`, `state`, `zip`, `credit_card_number`, `expiration_date`, `ccv`) VALUES
+(1, 15, 'khoa', 'smith', '123 buda drive', 'austin', 'tx', '78626', '92983889929', '08/12', '900');
 
 -- --------------------------------------------------------
 
@@ -134,7 +166,8 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) 
 (17, 13, 10, 3, 49.99),
 (18, 13, 3, 1, 49.99),
 (19, 13, 5, 1, 49.99),
-(20, 14, 10, 5, 59.99);
+(20, 14, 10, 5, 59.99),
+(21, 15, 1, 1, 9.99);
 
 -- --------------------------------------------------------
 
@@ -211,7 +244,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `email`, `address`, `created_at`) VALUES
-(1, 'test', '$2y$10$R8TIwzGN5tLssOIzwycF2O.xShdRDXg1xPZDQKR0rhyTqH9MFI/GG', 'test@gmail.com', NULL, '2024-09-10 21:54:40');
+(1, 'test', '$2y$10$R8TIwzGN5tLssOIzwycF2O.xShdRDXg1xPZDQKR0rhyTqH9MFI/GG', 'test@gmail.com', NULL, '2024-09-10 21:54:40'),
+(2, 'khoa', '$2y$10$imB9XtkuBTk/zLgVgJ52Z.oNJ3earNTAgx.0aGpCjqEPVp21RVaQq', 'khoa@gmail.com', '123 austin drive', '2024-11-25 22:48:55');
 
 --
 -- Indexes for dumped tables
@@ -236,6 +270,13 @@ ALTER TABLE `discount_codes`
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_user_id` (`user_id`);
+
+--
+-- Indexes for table `order_details`
+--
+ALTER TABLE `order_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`);
 
 --
 -- Indexes for table `order_items`
@@ -277,13 +318,19 @@ ALTER TABLE `discount_codes`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `order_details`
+--
+ALTER TABLE `order_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -295,7 +342,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -312,6 +359,12 @@ ALTER TABLE `cart`
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `order_details`
+--
+ALTER TABLE `order_details`
+  ADD CONSTRAINT `order_details_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
 
 --
 -- Constraints for table `order_items`

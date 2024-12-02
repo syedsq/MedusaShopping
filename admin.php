@@ -65,7 +65,6 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
         <div class="admin-options">
             <a href="manage_items.php" class="admin-section">Manage Items</a>
             <a href="manage_discount_codes.php" class="admin-section">Manage Discount Codes</a>
-            <a href="manage_sales_items.php" class="admin-section">Manage Sales Items</a>
         </div>
 
         <div class="admin-options">
