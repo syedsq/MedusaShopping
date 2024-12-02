@@ -8,6 +8,49 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     exit();
 }
 
+// Handle deletion request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+    $itemId = intval($_POST['id']);
+
+    // Delete the product from the database
+    $sql = "DELETE FROM products WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $itemId);
+
+    if ($stmt->execute()) {
+        echo json_encode(['status' => 'success', 'message' => 'Product deleted successfully.']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Error deleting product: ' . $stmt->error]);
+    }
+
+    $stmt->close();
+    exit();
+}
+
+// Handle update request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'edit') {
+    $itemId = intval($_POST['id']);
+    $name = $_POST['name'];
+    $description = $_POST['description'];
+    $price = floatval($_POST['price']);
+    $quantity = intval($_POST['quantity']);
+    $image_filename = $_POST['image'];
+
+    // Update the product in the database
+    $sql = "UPDATE products SET name = ?, description = ?, price = ?, quantity = ?, image = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssdiss", $name, $description, $price, $quantity, $image_filename, $itemId);
+
+    if ($stmt->execute()) {
+        echo json_encode(['status' => 'success', 'message' => 'Product updated successfully.']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Error updating product: ' . $stmt->error]);
+    }
+
+    $stmt->close();
+    exit();
+}
+
 // Fetch all items from the database
 $sql = "SELECT * FROM products";
 $result = $conn->query($sql);
@@ -18,11 +61,11 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Items</title>
+    <title>Manage Products</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f9f9f9;
             margin: 0;
             padding: 0;
         }
@@ -41,14 +84,14 @@ $result = $conn->query($sql);
 
         table {
             width: 100%;
-            margin-bottom: 20px;
+            margin: 20px 0;
             border-collapse: collapse;
         }
 
         table th, table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
         }
 
         table th {
@@ -56,80 +99,46 @@ $result = $conn->query($sql);
             color: white;
         }
 
-        form {
-            margin-bottom: 30px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input[type="text"], input[type="number"], input[type="submit"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .edit, .delete {
-            color: white;
+        .actions button {
             padding: 5px 10px;
+            margin: 2px;
+            border: none;
             border-radius: 3px;
-            text-decoration: none;
-            margin-right: 10px;
+            cursor: pointer;
         }
 
-        .edit {
-            background-color: #28a745;
+        .actions .edit {
+            background-color: #ffc107;
+            color: #fff;
         }
 
-        .delete {
+        .actions .delete {
             background-color: #dc3545;
+            color: #fff;
         }
 
-        .edit:hover {
-            background-color: #218838;
+        .actions .save {
+            background-color: #28a745;
+            color: #fff;
         }
 
-        .delete:hover {
-            background-color: #c82333;
+        .actions .cancel {
+            background-color: #6c757d;
+            color: #fff;
         }
     </style>
 </head>
 <body>
     <div class="admin-container">
-        <h1>Manage Items</h1>
+        <h1>Manage Products</h1>
 
-        <!-- Form to Add New Item -->
-        <form action="add_item.php" method="POST">
-            <label for="name">Item Name</label>
-            <input type="text" name="name" required>
-
-            <label for="description">Description</label>
-            <input type="text" name="description" required>
-
-            <label for="price">Price</label>
-            <input type="number" name="price" step="0.01" required>
-
-            <label for="quantity">Quantity</label>
-            <input type="number" name="quantity" required>
-
-            <label for="image_url">Image URL</label>
-            <input type="text" name="image_url" required>
-
-            <input type="submit" value="Add Item">
-        </form>
-
-        <!-- Display List of Items -->
+        <!-- Product List -->
         <table>
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
-                    <th>Price ($)</th>
+                    <th>Price</th>
                     <th>Quantity</th>
                     <th>Image</th>
                     <th>Actions</th>
@@ -138,27 +147,109 @@ $result = $conn->query($sql);
             <tbody>
                 <?php if ($result->num_rows > 0): ?>
                     <?php while ($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['description']); ?></td>
-                            <td><?php echo number_format($row['price'], 2); ?></td>
-                            <td><?php echo (int)$row['quantity']; ?></td>
-                            <td><img src="<?php echo htmlspecialchars($row['image']); ?>" alt="Product Image" width="50"></td>
-                            <td>
-                                <a href="edit_item.php?id=<?php echo $row['id']; ?>" class="edit">Edit</a>
-                                <a href="delete_item.php?id=<?php echo $row['id']; ?>" class="delete">Delete</a>
+                        <tr data-id="<?php echo $row['id']; ?>">
+                            <td class="name"><?php echo htmlspecialchars($row['name']); ?></td>
+                            <td class="description"><?php echo htmlspecialchars($row['description']); ?></td>
+                            <td class="price"><?php echo number_format($row['price'], 2); ?></td>
+                            <td class="quantity"><?php echo $row['quantity']; ?></td>
+                            <td class="image"><?php echo htmlspecialchars($row['image']); ?></td>
+                            <td class="actions">
+                                <button class="edit">Edit</button>
+                                <button class="delete">Delete</button>
                             </td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
-                    <tr><td colspan="6">No items found.</td></tr>
+                    <tr><td colspan="6">No products available.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+
+    <script>
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('edit')) {
+                handleEdit(e.target.closest('tr'));
+            } else if (e.target.classList.contains('delete')) {
+                handleDelete(e.target.closest('tr'));
+            }
+        });
+
+        function handleEdit(row) {
+            const id = row.dataset.id;
+            const name = row.querySelector('.name').textContent;
+            const description = row.querySelector('.description').textContent;
+            const price = parseFloat(row.querySelector('.price').textContent);
+            const quantity = parseInt(row.querySelector('.quantity').textContent, 10);
+            const image = row.querySelector('.image').textContent;
+
+            row.innerHTML = `
+                <td><input type="text" class="edit-name" value="${name}"></td>
+                <td><input type="text" class="edit-description" value="${description}"></td>
+                <td><input type="number" class="edit-price" value="${price}" step="0.01"></td>
+                <td><input type="number" class="edit-quantity" value="${quantity}"></td>
+                <td><input type="text" class="edit-image" value="${image}"></td>
+                <td>
+                    <button class="save">Save</button>
+                    <button class="cancel">Cancel</button>
+                </td>
+            `;
+
+            row.querySelector('.save').addEventListener('click', function () {
+                const updatedName = row.querySelector('.edit-name').value;
+                const updatedDescription = row.querySelector('.edit-description').value;
+                const updatedPrice = parseFloat(row.querySelector('.edit-price').value);
+                const updatedQuantity = parseInt(row.querySelector('.edit-quantity').value, 10);
+                const updatedImage = row.querySelector('.edit-image').value;
+
+                fetch('', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'edit',
+                        id,
+                        name: updatedName,
+                        description: updatedDescription,
+                        price: updatedPrice,
+                        quantity: updatedQuantity,
+                        image: updatedImage
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            });
+
+            row.querySelector('.cancel').addEventListener('click', function () {
+                location.reload(); // Cancel and reload to reset the table
+            });
+        }
+
+        function handleDelete(row) {
+            const id = row.dataset.id;
+            if (confirm('Are you sure you want to delete this product?')) {
+                fetch('', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ action: 'delete', id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        row.remove();
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 </html>
-
-<?php
-$conn->close();
-?>
