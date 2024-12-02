@@ -141,6 +141,7 @@ $stmt->close();
                     $total_price = $item['quantity'] * $item['price'];
                     $subtotal += $total_price;
                 ?>
+                <?php $subtotal = $subtotal+ $subtotal* 0.0825 ;?>
                 <tr>
                     <td><?php echo htmlspecialchars($item['name']); ?></td>
                     <td><?php echo (int)$item['quantity']; ?></td>
@@ -153,8 +154,8 @@ $stmt->close();
 
         <!-- Order Summary Details -->
         <div class="summary-details">
-            <p><strong>Subtotal:</strong> $<?php echo number_format($subtotal, 2); ?></p>
-            <p><strong>Total:</strong> $<?php echo number_format($total_amount, 2); ?></p>
+            <p><strong>Subtotal before discount:</strong> $<?php echo number_format($subtotal, 2); ?></p>
+            <p><strong>Total:</strong> $<?php echo number_format($total_amount -$total_amount*0.25, 2); ?></p>
         </div>
 
         <!-- Back to Home Button -->
