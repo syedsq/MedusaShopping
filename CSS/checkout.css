@@ -1,0 +1,182 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.checkout-container {
+    max-width: 600px;
+    margin-top: 5%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+header {
+    background-color: #fff;
+    padding: 15px 30px;
+    border-bottom: 2px solid #ddd;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2rem;
+    color: #333;
+    margin: 0;
+}
+
+/* Progress Steps */
+.checkout-calculation {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.checkout-calculation p {
+    font-size: 1.1em;
+    margin: 10px 0;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkout-calculation p span {
+    font-weight: bold;
+    color: #333;
+}
+
+.checkout-calculation p:last-child {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #00b4cc; 
+}
+
+.checkout-calculation .totals {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.checkout-calculation .totals p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+/* Add hover effect on checkout-calculation box */
+.checkout-calculation:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+.wrapper {
+    margin-top: 5%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    padding: 5% 10%;
+    background-color: #f4f4f4;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.discount-code-input{
+    width:100%;
+}
+form {
+    width: 100%;
+}
+
+h1 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.name, .address-info, .cc-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.name div, .address-info div, .cc-info div {
+    width: 30%;
+}
+
+.btns {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.place-order{
+    background-color: #f3d655;
+}
+.place-order:hover{
+    background-color: #61f8a5a9 ;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="button"] {
+    background-color: #ddd;
+    color: #333;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+input:focus, button:focus {
+    outline: none;
+}
+
+@media (max-width: 500px) {
+    .wrapper {
+        width: 100%;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    .name, .address-info, .cc-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .name div, .address-info div, .cc-info div {
+        width: 100%;
+    }
+}

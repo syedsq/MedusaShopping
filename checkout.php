@@ -9,11 +9,14 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];  // User's ID from session
+$is_logged_in = isset($_SESSION['user_id']);
 
-// Check if the cart is empty
-if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
-    echo "Your cart is empty. <a href='index.php'>Go back to shopping</a>";
-    exit();
+// Count the total number of items in the cart
+$cart_item_count = 0;
+if (isset($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $item) {
+        $cart_item_count += $item['quantity'];  // Sum up quantities of all items
+    }
 }
 
 // Initialize cart totals
@@ -114,75 +117,78 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['final_checkout'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
     <style>
+        <?php include 'CSS/styles.css'; ?>
+        <?php include 'CSS/checkout.css'; ?>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            background-image: url('background/background3.jpeg');
+            display: flex;
         }
-
-        h1, h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .checkout-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin: 8px 0 4px;
-            font-weight: bold;
-        }
-
-        input[type="text"], input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        input[type="submit"] {
-            background-color: #28a745;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #218838;
-        }
-
-        .summary {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .discount-message {
-            text-align: center;
-            color: green;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+        
     </style>
+    <nav class="navbar">  
+        <ul>
+            <!-- Logo on the left -->
+            <li class="logo">
+                <a class="main_page" href="index.php">
+                    <img class="image" src="icon-image/logo.png" alt="Logo">Medusa Gym</a>
+            </li>
+            <!-- Links on the right -->
+            <li class="toggle-button">
+                <a href="#">
+                    <img class= "image" src="icon-image/toggle-icon.png" alt="toggle" style= "vertical-align: middle">
+                </a>
+            </li>
+            <div class="nav-items">
+                <li><a class="NavButton" href="product.php">Browse</a></li>
+                <?php if ($is_logged_in): ?>
+                    <li><span class="login_welcome">Welcome, <?php echo $_SESSION['username']; ?>!</span></li>
+                    <li><a class ="NavUserProfile" href="user-profile.php">My profile</a></li>
+                    <li><a class ="NavLogout" href="logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li><a class="NavLogin" href="login.php"><img class="login-icon" src="icon-image/login.png" alt="Login Icon" style= "vertical-align: middle">Login</a></li>
+                    <li><a class="NavRegister" href="register.php">Register</a></li>
+                <?php endif; ?>
+                <li class="cart">
+                    <a href="cart.php">
+                        <img src="icon-image/cart.png" alt="Cart">
+                        <?php if ($cart_item_count > 0): ?>
+                            <div class="cart-count"><?php echo $cart_item_count; ?></div>
+                        <?php endif; ?>
+                    </a>
+                    <div class="cart-preview" id="cart-preview">
+                    <h3>Cart Preview</h3>
+                    <ul id="cart-items">
+                        <!-- Dynamically generated cart items will go here -->
+                    </ul>
+                    <?php if ($cart_item_count > 0): ?>
+                    <a href="cart.php" class="view-cart">View Cart</a>
+                    <?php else: ?>
+                    <a href="product.php" class="view-cart">Browse our product</a>
+                    <?php endif; ?>
+                    </div>
+                </li>
+                
+            </div>
+        </ul>
+    </nav>
 </head>
 <body>
-    <h1>Checkout</h1>
+    
     <div class="checkout-container">
+        <h1>Checkout</h1>
         <!-- Discount Code -->
+        <div class="discount">
         <form action="checkout.php" method="POST">
             <label for="discount_code">Discount Code (optional):</label>
-            <input type="text" name="discount_code" placeholder="Enter discount code" value="<?php echo htmlspecialchars($discount_code); ?>">
-            <input type="submit" value="Apply Discount">
+            <div class="input-group">
+                <input type="text" class="discount-code-input" name="discount_code" placeholder="Enter discount code" value="<?php echo htmlspecialchars($discount_code); ?>">
+                <button type="submit" class="apply-btn">Apply Discount</button>
+            </div>
         </form>
-
+            </div>
         <!-- Display discount message -->
         <?php if ($discount_message): ?>
             <p class="discount-message"><?php echo $discount_message; ?></p>
@@ -190,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['final_checkout'])) {
 
         <!-- Order Summary -->
         <h2>Order Summary</h2>
-        <div class="summary">
+        <div class="checkout-calculation">
             <p>Subtotal: $<?php echo number_format($subtotal, 2); ?></p>
             <p>Discount: -$<?php echo number_format($discount_amount, 2); ?></p>
             <p>Tax: $<?php echo number_format($tax_amount, 2); ?></p>
@@ -198,32 +204,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['final_checkout'])) {
         </div>
 
         <!-- Shipping and Payment Details -->
-        <h2>Shipping Details</h2>
+        <div class="wrapper">
+    <div class="container">
         <form action="checkout.php" method="POST">
-            <label for="f-name">First Name</label>
-            <input type="text" name="f-name" required>
-            <label for="l-name">Last Name</label>
-            <input type="text" name="l-name" required>
-            <label for="address">Address</label>
-            <input type="text" name="address" required>
-            <label for="city">City</label>
-            <input type="text" name="city" required>
-            <label for="state">State</label>
-            <input type="text" name="state" required>
-            <label for="zip">Zip Code</label>
-            <input type="text" name="zip" required>
+            <h1><i class="fas fa-shipping-fast"></i> Shipping Details</h1>
+            <div class="name">
+                <div>
+                    <label for="f-name">First</label>
+                    <input type="text" name="f-name" required>
+                </div>
+                <div>
+                    <label for="l-name">Last</label>
+                    <input type="text" name="l-name" required>
+                </div>
+            </div>
 
-            <h2>Payment Information</h2>
-            <label for="card-num">Credit Card Number</label>
-            <input type="text" name="card-num" required>
-            <label for="expire">Expiration Date</label>
-            <input type="text" name="expire" placeholder="MM/YY" required>
-            <label for="security">CCV</label>
-            <input type="text" name="security" required>
+            <div class="street">
+                <label for="address">Street</label>
+                <input type="text" name="address" required>
+            </div>
 
-            <input type="hidden" name="final_checkout" value="true">
-            <input type="submit" value="Place Order">
+            <div class="address-info">
+                <div>
+                    <label for="city">City</label>
+                    <input type="text" name="city" required>
+                </div>
+                <div>
+                    <label for="state">State</label>
+                    <input type="text" name="state" required>
+                </div>
+                <div>
+                    <label for="zip">Zip</label>
+                    <input type="text" name="zip" required>
+                </div>
+            </div>
+
+            <h1><i class="far fa-credit-card"></i> Payment Information</h1>
+
+            <div class="cc-num">
+                <label for="card-num">Credit Card No.</label>
+                <input type="text" name="card-num" required>
+            </div>
+
+            <div class="cc-info">
+                <div>
+                    <label for="expire">Exp</label>
+                    <input type="text" name="expire" required>
+                </div>
+                <div>
+                    <label for="security">CCV</label>
+                    <input type="text" name="security" required>
+                </div>
+            </div>
+
+            
+                <input type="hidden" name="final_checkout" value="true">
+                <input class="place-order" type="submit" value="Place Order">
+
         </form>
     </div>
+</div>
+    </div>
+    <script src="JavaScript/cart.js"></script>
+    <script src="JavaScript/toggle.js"></script>      
 </body>
 </html>
