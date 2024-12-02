@@ -268,8 +268,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <table>
                 <thead>
                     <tr>
+                        <th>Picture</th>
                         <th>Product</th>
-                        <th>Quantity</th>
+                        <th>Count</th>
                         <th class="minimize" >Price ($)</th>
                         <th>Total ($)</th>
                         <th>Action</th>
@@ -288,9 +289,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         $item_total = $price * $item['quantity'];
                         $subtotal += $item_total;
+                        $image_path = "Product-images/" . strtolower(str_replace(' ', '_', $name)) . ".jpg";
                     ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($name); ?></td>
+                        <td>
+                            <img src="<?php echo htmlspecialchars($image_path); ?>" 
+                                 alt="<?php echo htmlspecialchars($image_path); ?>" 
+                                 style="width: 50px; height: 50px; object-fit: cover;">
+                        </td>
+                        <td><?php echo htmlspecialchars($name); ?></td>
                             
                             <td><?php echo (int)$item['quantity']; ?></td>
                             
