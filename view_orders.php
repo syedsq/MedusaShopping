@@ -11,31 +11,54 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 // Handle deletion of an order
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
     $order_id = $_POST['order_id'];
-    
-    // First, delete related items from the order_items table
+
+    // Delete related items from the order_details table
+    $delete_details_sql = "DELETE FROM order_details WHERE order_id = ?";
+    $stmt = $conn->prepare($delete_details_sql);
+    $stmt->bind_param("i", $order_id);
+    if (!$stmt->execute()) {
+        echo "<p>Error deleting order details: " . $conn->error . "</p>";
+        $stmt->close();
+        exit();
+    }
+    $stmt->close();
+
+    // Delete related items from the order_items table
     $delete_items_sql = "DELETE FROM order_items WHERE order_id = ?";
     $stmt = $conn->prepare($delete_items_sql);
     $stmt->bind_param("i", $order_id);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        echo "<p>Error deleting order items: " . $conn->error . "</p>";
+        $stmt->close();
+        exit();
+    }
     $stmt->close();
 
-    // Then, delete the order from the orders table
+    // Delete the order from the orders table
     $delete_order_sql = "DELETE FROM orders WHERE id = ?";
     $stmt = $conn->prepare($delete_order_sql);
     $stmt->bind_param("i", $order_id);
-
     if ($stmt->execute()) {
         echo "<p>Order deleted successfully.</p>";
     } else {
         echo "<p>Error deleting order: " . $conn->error . "</p>";
     }
-
     $stmt->close();
 }
 
 // Fetch all orders with sorting options
 $sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'created_at';
 $order_direction = isset($_GET['order_direction']) ? $_GET['order_direction'] : 'DESC';
+
+// Protect against SQL injection in sort and order parameters
+$allowed_sort_columns = ['created_at', 'username', 'total_amount'];
+$allowed_order_directions = ['ASC', 'DESC'];
+if (!in_array($sort_by, $allowed_sort_columns)) {
+    $sort_by = 'created_at';
+}
+if (!in_array($order_direction, $allowed_order_directions)) {
+    $order_direction = 'DESC';
+}
 
 $sql = "SELECT orders.*, users.username FROM orders JOIN users ON orders.user_id = users.id ORDER BY $sort_by $order_direction";
 $result = $conn->query($sql);
@@ -157,7 +180,6 @@ $result = $conn->query($sql);
     </div>
 </body>
 </html>
-
 <?php
 $conn->close();
 ?>
