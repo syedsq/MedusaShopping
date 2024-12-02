@@ -42,7 +42,8 @@ body {
     text-decoration: underline;
 }
 .profile {
-    width: 90%;
+    width: 100%;
+
 }
 
 .Profile .title {
@@ -86,4 +87,17 @@ body {
 .past-order p {
     color: #555;
     line-height: 1.6;
+}
+button {
+    background-color: #3f643c;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+button:hover {
+    background-color: #62c459;
+    
 }

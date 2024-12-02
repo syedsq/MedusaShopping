@@ -113,7 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #d43f48;
         }
 
-        /* Empty Cart Styles */
 
         /* Button styling for checkout */
         .checkout-button, .back-button {

@@ -58,9 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $update_stmt->bind_param("ssssssi", $first_name, $last_name, $address, $city, $state, $zip, $user_id);
 
     if ($update_stmt->execute()) {
-        $message = "Order details updated successfully!";
+        $message = "Your details has been updated successfully!";
     } else {
-        $message = "Error updating order details: " . $update_stmt->error;
+        $message = "Error updating user details: " . $update_stmt->error;
     }
     $update_stmt->close();
 }
@@ -83,6 +83,21 @@ $conn->close();
             background-attachment: fixed;
             background-image: url('background/user-background2.jpg');
         }
+        .success-message {
+            color: green;
+            margin: 10px 0;
+            font-size: 14px;
+            background-color: #e6ffe7;
+            padding: 10px;
+            border: 1px solid green;
+            border-radius: 5px;  
+        }
+        .error-message a{
+            color: rgb(124, 9, 9);
+            text-decoration: none;
+            font-weight: 800;
+        }
+        
     </style>
 </head>
 <body>
@@ -107,7 +122,7 @@ $conn->close();
 
     <div class="Profile">
         <div class="title">
-            <h4>Order Details</h4>
+            <h4>User Profile</h4>
         </div>
         <form method="POST" action="">
             <div class="name">
@@ -142,8 +157,8 @@ $conn->close();
                 <button class="submit" type="submit">Save Changes</button>
             </div>
         </form>
-        <?php if ($message): ?>
-            <p><?php echo htmlspecialchars($message); ?></p>
+        <?php if ($message == "Your details has been updated successfully!"): ?>
+            <p class=success-message><?php echo htmlspecialchars($message); ?></p>
         <?php endif; ?>
     </div>
 </body>
