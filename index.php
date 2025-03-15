@@ -44,11 +44,6 @@ if (isset($_SESSION['cart'])) {
     <?php include 'navigation_bar.php'; ?>
 </head>
 <body class ="main-page-body">
-        
-    
-                    
-
-
     <!-- background Section -->
     <section class="cardview">
         <div class="cardview-overlay"></div>

@@ -6,7 +6,7 @@
             padding: 20px;
         }
         .sidebar {
-            width: 20%;
+            width: 15%;
             min-width: 200px;
             max-width: 400px; 
             position: fixed;
@@ -49,10 +49,11 @@
             display: flex;
             flex-wrap: wrap;
             margin-left: 20%;
-            width: 80%;
+            width: 80%; 
             gap: 16px;
             z-index: 2;
             justify-content: flex-start;
+
             padding: 20px;
         }
         .product-card {
