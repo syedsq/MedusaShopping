@@ -1,5 +1,5 @@
 # Medusa Gym - EcommerceEngine
-
+"Turn your weaknesses to stone"
 ## Project Overview
 Medusa Gym is an e-commerce website specializing in selling gym equipment. This project is developed as part of a **Software Engineering** class by **Group 6**.
 
