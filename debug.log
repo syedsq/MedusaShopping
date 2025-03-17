@@ -1,0 +1,9 @@
+Array
+(
+    [action] => add
+    [name] => Yare Yare, Unstoppable Ojou-sama
+    [description] => da
+    [price] => 12
+    [quantity] => 4
+    [image] => product-sample.jpg
+)

@@ -7,7 +7,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     echo "Access denied. You must be an admin to access this page.";
     exit();
 }
-
+//this need to be fixed
 // Handle deletion request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     $itemId = intval($_POST['id']);
@@ -53,16 +53,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // Handle add new item request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
-    $name = $_POST['name'];
-    $description = $_POST['description'];
+    include 'config.php'; // Ensure database connection is included
+    
+    // Sanitize inputs
+    $name = trim($_POST['name']);
+    $description = trim($_POST['description']);
     $price = floatval($_POST['price']);
     $quantity = intval($_POST['quantity']);
-    $image_filename = $_POST['image'];
+    $image_filename = trim($_POST['image']);
 
-    // Add new product to the database
+    // Validate required fields
+    if (empty($name) || empty($description) || empty($price) || empty($quantity) || empty($image_filename)) {
+        echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
+        exit();
+    }
+
+    // Prepare and execute SQL statement
     $sql = "INSERT INTO products (name, description, price, quantity, image) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssdiss", $name, $description, $price, $quantity, $image_filename);
+    $stmt->bind_param("ssdsi", $name, $description, $price, $quantity, $image_filename);
 
     if ($stmt->execute()) {
         echo json_encode(['status' => 'success', 'message' => 'New product added successfully.']);
@@ -71,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 
     $stmt->close();
+    $conn->close();
     exit();
 }
 
@@ -95,18 +105,13 @@ $result = $conn->query($sql);
 
         <!-- Add Item Form -->
         <form id="add-form">
+            <input type="hidden" name="action" value="add"> <!-- 🔹 This ensures the action is set -->
             <input type="text" name="name" placeholder="Name" required>
             <input type="text" name="description" placeholder="Description" required>
             <input type="number" name="price" placeholder="Price" step="0.01" required>
             <input type="number" name="quantity" placeholder="Quantity" required>
             <input type="text" name="image" placeholder="Image Filename" required>
-            
-
-
-            <button type="submit" value="add_product">Add Product</button>
-
-
-
+            <button type="submit">Add Product</button>
         </form>
 
         <!-- Product List -->
@@ -146,8 +151,7 @@ $result = $conn->query($sql);
     <script>
         document.getElementById('add-form').addEventListener('submit', function (e) {
             e.preventDefault();
-            const formData = new FormData(this);
-            formData.append('action', 'add');
+            const formData = new FormData(this);  // No need to manually append 'action'
 
             fetch('', {
                 method: 'POST',
@@ -157,9 +161,10 @@ $result = $conn->query($sql);
             .then(data => {
                 alert(data.message);
                 if (data.status === 'success') {
-                    location.reload();
+                    location.reload(); // Refresh the page to see the new product
                 }
-            });
+            })
+            .catch(error => console.error('Fetch Error:', error)); // 🔹 Add error logging
         });
 
         document.addEventListener('click', function (e) {
@@ -175,7 +180,7 @@ $result = $conn->query($sql);
             const name = row.querySelector('.name').textContent;
             const description = row.querySelector('.description').textContent;
             const price = parseFloat(row.querySelector('.price').textContent);
-            const quantity = parseInt(row.querySelector('.quantity').textContent, 10);
+            const quantity = parseInt(row.querySelector('.quantity').textQContent, 10);
             const image = row.querySelector('.image').textContent;
 
             row.innerHTML = `
