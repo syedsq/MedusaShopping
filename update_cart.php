@@ -22,7 +22,6 @@ $query->close();
 if ($new_quantity > $current_quantity) {
     // Case 1: New quantity is greater than the current quantity
     $quantity_diff = $new_quantity - $current_quantity;
-    
     // Update session cart with new quantity
     $_SESSION['cart'][$product_id]['quantity'] = $new_quantity;
 
